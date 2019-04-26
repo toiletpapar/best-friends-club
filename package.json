@@ -1,0 +1,31 @@
+{
+  "name": "best-friends-club",
+  "version": "1.0.0",
+  "description": "A gathering spot for the best of friends",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "dev": "node ./server/server.js",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toiletpapar/best-friends-club.git"
+  },
+  "keywords": [
+    "webapp"
+  ],
+  "author": "Tyler Poon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toiletpapar/best-friends-club/issues"
+  },
+  "homepage": "https://github.com/toiletpapar/best-friends-club#readme",
+  "devDependencies": {
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
