@@ -2,6 +2,7 @@ const path = require('path')
 
 module.exports = {
   mode: 'development',
+  devtool: 'source-map',
   entry: './client/main.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -9,6 +10,13 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        include: [
+          path.resolve(__dirname, './client')
+        ],
+        loader: 'awesome-typescript-loader'
+      },
       {
         test: /\.jsx?$/,
         include: [
@@ -21,6 +29,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   }
 }
