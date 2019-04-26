@@ -2,7 +2,6 @@
   "name": "best-friends-club",
   "version": "1.0.0",
   "description": "A gathering spot for the best of friends",
-  "main": "index.js",
   "scripts": {
     "test": "jest",
     "dev": "node ./server/server.js",
@@ -22,10 +21,17 @@
   },
   "homepage": "https://github.com/toiletpapar/best-friends-club#readme",
   "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.5",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.1"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }
