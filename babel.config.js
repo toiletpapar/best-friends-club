@@ -1,15 +1,17 @@
 const presets = [
   [
-    "@babel/env",
+    '@babel/env',
     {
       targets: {
-        chrome: "73",
+        chrome: '73',
       },
       useBuiltIns: false,
-      modules: false
+      modules: false,
     },
   ],
-  "@babel/preset-react"
+  '@babel/preset-react',
 ]
 
-module.exports = { presets };
+module.exports = {
+  presets,
+}

@@ -6,29 +6,29 @@ module.exports = {
   entry: './client/main.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         include: [
-          path.resolve(__dirname, './client')
+          path.resolve(__dirname, './client'),
         ],
-        loader: 'awesome-typescript-loader'
+        loader: 'awesome-typescript-loader',
       },
       {
         test: /\.jsx?$/,
         include: [
-          path.resolve(__dirname, './client')
+          path.resolve(__dirname, './client'),
         ],
         use: {
-          loader: 'babel-loader'
-        }
-      }
-    ]
+          loader: 'babel-loader',
+        },
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx']
-  }
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+  },
 }

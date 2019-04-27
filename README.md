@@ -2,7 +2,7 @@
 A gathering place for the best of friends
 
 ## Roadmap
-1. Get Linters ready
+1. Get hot module reloading going
 2. Get coding!
 
 ## Development
