@@ -1,7 +1,10 @@
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: path.resolve(__dirname, './client/main.tsx'),
+  entry: {
+    app: [path.resolve(__dirname, './client/main.tsx')],
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
@@ -10,14 +13,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        include: [
-          path.resolve(__dirname, './client'),
-        ],
-        loader: 'awesome-typescript-loader',
-      },
-      {
-        test: /\.jsx?$/,
+        test: /\.(j|t)sx?$/,
         include: [
           path.resolve(__dirname, './client'),
         ],
@@ -30,4 +26,9 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Best Friends Club',
+    }),
+  ],
 }

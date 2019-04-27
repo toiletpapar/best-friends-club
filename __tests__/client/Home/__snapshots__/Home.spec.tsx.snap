@@ -2,6 +2,6 @@
 
 exports[`#Home should render correctly 1`] = `
 <div>
-  Hello World!
+  Hey HMR!
 </div>
 `;

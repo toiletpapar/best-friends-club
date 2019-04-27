@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 const Home = () => {
-  return <div>Hot!</div>
+  return <div>Hey HMR!</div>
 }
 
 export {

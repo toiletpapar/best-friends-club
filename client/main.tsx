@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { Home } from './Home/index'
+import App from './App'
 
-ReactDOM.render(
-  <Home />,
-  document.getElementById('root')
-)
+const root = document.createElement('div')
+document.body.appendChild(root)
+
+ReactDOM.render(<App />, root)

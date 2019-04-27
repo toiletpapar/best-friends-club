@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   const webpack = require('webpack')
   const webpackDevMiddleware = require('webpack-dev-middleware')
+  const webpackHotMiddleware = require('webpack-hot-middleware')
 
   const webpackConfig = require('../webpack.dev.js')
   const compiler = webpack(webpackConfig)
@@ -16,10 +17,12 @@ if (process.env.NODE_ENV === 'production') {
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
   }))
+
+  app.use(webpackHotMiddleware(compiler))
 }
 
 app.use('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/index.html'))
+  res.sendFile(path.resolve(__dirname, '../dist/index.html'))
 })
 
 app.listen(8080, () => {

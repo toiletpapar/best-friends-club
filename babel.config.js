@@ -10,8 +10,20 @@ const presets = [
     },
   ],
   '@babel/preset-react',
+  '@babel/preset-typescript',
+]
+
+const plugins = [
+  'react-hot-loader/babel',
+  [
+    '@babel/plugin-proposal-class-properties',
+    {
+      loose: true,
+    },
+  ],
 ]
 
 module.exports = {
   presets,
+  plugins,
 }
