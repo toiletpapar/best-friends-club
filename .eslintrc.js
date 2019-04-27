@@ -4,11 +4,12 @@ module.exports = {
     'es6': true,
     'node': true,
   },
-  'extends': 'google',
+  'extends': ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:react/recommended'],
   'globals': {
     'Atomics': 'readonly',
     'SharedArrayBuffer': 'readonly',
   },
+  'parser': '@typescript-eslint/parser',
   'parserOptions': {
     'ecmaFeatures': {
       'jsx': true,
@@ -18,8 +19,17 @@ module.exports = {
   },
   'plugins': [
     'react',
+    '@typescript-eslint'
   ],
   'rules': {
-    semi: ["error", "never"]
+    'semi': ['error', 'never'],
+    'indent': 'off',
+    '@typescript-eslint/indent': ["error", 2],
+    'no-console': 'off'
   },
+  'settings': {
+    'react': {
+      'version': 'detect'
+    }
+  }
 };

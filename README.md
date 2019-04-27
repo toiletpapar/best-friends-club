@@ -2,8 +2,11 @@
 A gathering place for the best of friends
 
 ## Roadmap
-1. Get hot module reloading going
-2. Get coding!
+1. Add routing
+2. Implement Code Splitting
+3. Switch to SSR
+4. Add meta information
+5. Get coding!
 
 ## Development
 ```
