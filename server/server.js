@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 
 const app = express()
+console.log(`Server starting in ${process.env.NODE_ENV} mode`)
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.resolve(__dirname, '../dist')))
