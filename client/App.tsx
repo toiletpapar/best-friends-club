@@ -6,7 +6,7 @@ import theme from './theme.json'
 
 import { Home } from './Home/index'
 
-const App = () => {
+const App = (): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <Home />
