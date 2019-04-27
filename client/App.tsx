@@ -1,11 +1,16 @@
 import { hot } from 'react-hot-loader/root'
 import * as React from 'react'
 
+import { ThemeProvider } from 'styled-components'
+import theme from './theme.json'
+
 import { Home } from './Home/index'
 
 const App = () => {
   return (
-    <Home />
+    <ThemeProvider theme={theme}>
+      <Home />
+    </ThemeProvider>
   )
 }
 

@@ -1,7 +1,11 @@
 import * as React from 'react'
 
+import { Nav } from '../Nav/index'
+
 const Home = () => {
-  return <div>Hey HMR!</div>
+  return (
+    <Nav />
+  )
 }
 
 export {
