@@ -18,6 +18,7 @@ module.exports = {
         test: /\.(j|t)sx?$/,
         include: [
           path.resolve(__dirname, './client'),
+          path.resolve(__dirname, './utils/')
         ],
         use: {
           loader: 'babel-loader',

@@ -11,7 +11,8 @@
   },
   "include": [
       "./__tests__/**/*",
-      "./client/**/*"
+      "./client/**/*",
+      "./utils/**/*"
   ],
   "exclude": [
     "node_modules"

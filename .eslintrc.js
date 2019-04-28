@@ -3,6 +3,7 @@ module.exports = {
     'browser': true,
     'es6': true,
     'node': true,
+    'jest': true
   },
   'extends': ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:react/recommended'],
   'globals': {
@@ -24,7 +25,8 @@ module.exports = {
   'rules': {
     'semi': ['error', 'never'],
     'indent': 'off',
-    '@typescript-eslint/indent': ["error", 2],
+    '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/no-explicit-any': 'off',
     'no-console': 'off'
   },
   'settings': {
