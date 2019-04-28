@@ -2,11 +2,12 @@
 A gathering place for the best of friends
 
 ## Roadmap
-1. Add routing
-2. Implement Code Splitting
-3. Switch to SSR
-4. Add meta information
-5. Get coding!
+1. Add codename tests
+2. Add routing
+3. Implement Code Splitting
+4. Switch to SSR
+5. Add meta information
+6. Get coding!
 
 ## Development
 ```
