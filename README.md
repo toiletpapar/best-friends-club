@@ -17,3 +17,7 @@ npm run dev
 ```
 
 Then navigate to http://localhost:8080
+
+## References
+React-Typescript cheatsheat
+https://github.com/sw-yx/react-typescript-cheatsheet

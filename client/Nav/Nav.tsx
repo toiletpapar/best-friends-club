@@ -4,12 +4,11 @@ import styled from 'styled-components'
 const Container = styled('div')`
   background-color: ${(props): string => props.theme.black};
   color: ${(props): string => props.theme.white};
-  height: 100px;
 `
 
-const Nav = (): JSX.Element => {
+const Nav = (props: React.PropsWithoutRef<JSX.IntrinsicElements['div']>): JSX.Element => {
   return (
-    <Container>
+    <Container className={props.className}>
       Hello World
     </Container>
   )

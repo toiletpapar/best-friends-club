@@ -9,9 +9,17 @@ export interface CodenamesState {
 
 const Container = styled('div')`
   display: grid;
-  grid: 1fr 1fr 1fr 1fr 1fr / 1fr 1fr 1fr 1fr 1fr
+  grid: auto-flow 100px / 1fr 1fr 1fr 1fr 1fr
+  height: 100%;
   row-gap: 10px;
   column-gap: 10px;
+`
+
+const Card = styled('div')`
+  background-color: ${(props): string => props.theme.gray};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 class Codenames extends React.PureComponent<{}, CodenamesState> {
@@ -30,7 +38,7 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
         {
           this.state.game.getState().board.map((card): JSX.Element => {
             return (
-              <div key={card.word}>{card.word}</div>
+              <Card key={card.word}>{card.word}</Card>
             )
           })
         }
