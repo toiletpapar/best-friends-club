@@ -22,6 +22,15 @@ describe('PRNG', (): void => {
       expect(prng.getRandomNumber.bind(null, -4, -7)).toThrow(Error)
     })
   })
+
+  describe('#getID', (): void => {
+    it('should return a random 24 character string', (): void => {
+      let actual = prng.getID()
+
+      expect(actual).toHaveLength(24)
+      expect(actual).toBe('fpazhhhhhhhhhhhhhhhhhhhh')
+    })
+  })
   
   describe('#getRandomNumberSet', (): void => {
     it('should return an array of unique numbers of size of the provided length with numbers in the provided range', (): void => {

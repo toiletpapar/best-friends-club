@@ -1,6 +1,8 @@
 import express from 'express'
 import * as path from 'path'
 
+import { router as CodenamesRouter } from './Codenames/index'
+
 import webpack from 'webpack'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
@@ -21,9 +23,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(webpackHotMiddleware(compiler))
 }
 
-app.get('/hello', (req, res): void => {
-  res.json({foo: 'hello'})
-})
+app.use('/codenames', CodenamesRouter)
 
 app.use('*', (req, res): void => {
   res.sendFile(path.resolve(__dirname, '../dist/index.html'))

@@ -19,6 +19,7 @@ interface Card {
 }
 
 interface GameData {
+  id: string;
   board: Card[];
   gameState: GameState;
   currentTurn: Team.FIRSTTEAM | Team.SECONDTEAM;
@@ -40,6 +41,7 @@ class CodenamesGame {
   private static NUM_BYSTANDERS: number = 7
   private static NUM_ASSASSINS: number = 1
 
+  private id: string
   private prng: PRNG
   private board: Card[]
   private gameState: GameState
@@ -48,6 +50,7 @@ class CodenamesGame {
 
   public constructor() {
     this.prng = new PRNG()
+    this.id = this.prng.getID()
     this.setupGame()
   }
 
@@ -167,6 +170,7 @@ class CodenamesGame {
 
   // public getState(): GameData {
   //   return {
+  //     id: this.id,
   //     board: this.getClientBoardState(),
   //     gameState: this.gameState,
   //     currentTurn: this.currentTurn,
@@ -176,6 +180,7 @@ class CodenamesGame {
 
   public getState(): GameData {
     return {
+      id: this.id,
       board: this.board,
       gameState: this.gameState,
       currentTurn: this.currentTurn,

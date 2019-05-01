@@ -7,6 +7,10 @@ class PRNG {
     return Math.floor(Math.random() * (max - min + 1) ) + min
   }
 
+  public getID(): string {
+    return new Array(24).fill(1).map((): number => this.getRandomNumber(97, 122)).reduce((id, num): string => `${id}${String.fromCharCode(num)}`, '')
+  }
+
   public getRandomNumberSet(min: number, max: number, length: number): number[] {
     if (max - min + 1 < length) {
       throw new Error(`PRNG.getRandomNumberSet: range is not larger than length`)
