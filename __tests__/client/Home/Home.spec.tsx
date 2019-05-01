@@ -2,8 +2,8 @@ import * as React from 'react'
 import * as renderer from 'react-test-renderer'
 import { Home } from '../../../client/Home/index'
 
-describe('#Home', () => {
-  it('should render correctly', () => {
+describe('#Home', (): void => {
+  it('should render correctly', (): void => {
     const tree = renderer
       .create(<Home />)
       .toJSON()

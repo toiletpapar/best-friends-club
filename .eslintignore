@@ -2,4 +2,3 @@ node_modules
 dist
 webpack.*
 build
-server

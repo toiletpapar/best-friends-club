@@ -1,5 +1,10 @@
-const express = require('express')
-const path = require('path')
+import express from 'express'
+import * as path from 'path'
+
+import webpack from 'webpack'
+import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
+import webpackConfig from '../webpack.dev.client.js'
 
 const app = express()
 console.log(`Server starting in ${process.env.NODE_ENV} mode`)
@@ -7,11 +12,6 @@ console.log(`Server starting in ${process.env.NODE_ENV} mode`)
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.resolve(__dirname, '../dist')))
 } else {
-  const webpack = require('webpack')
-  const webpackDevMiddleware = require('webpack-dev-middleware')
-  const webpackHotMiddleware = require('webpack-hot-middleware')
-
-  const webpackConfig = require('../webpack.dev.js')
   const compiler = webpack(webpackConfig)
 
   app.use(webpackDevMiddleware(compiler, {
@@ -21,10 +21,14 @@ if (process.env.NODE_ENV === 'production') {
   app.use(webpackHotMiddleware(compiler))
 }
 
-app.use('*', (req, res) => {
+app.get('/hello', (req, res): void => {
+  res.json({foo: 'hello'})
+})
+
+app.use('*', (req, res): void => {
   res.sendFile(path.resolve(__dirname, '../dist/index.html'))
 })
 
-app.listen(8080, () => {
+app.listen(8080, (): void => {
   console.log('Server listening on port 8080')
 })

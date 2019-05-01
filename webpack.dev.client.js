@@ -1,10 +1,11 @@
 const path = require('path')
 const merge = require('webpack-merge')
-const common = require('./webpack.common.js')
+const common = require('./webpack.common.web.js')
 const webpack = require('webpack')
 
-module.exports = merge(common, {
+module.exports = merge.smart(common, {
   mode: 'development',
+  target: 'web',
   entry: {
     app: ['react-hot-loader/patch', 'webpack-hot-middleware/client'],
   },
