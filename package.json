@@ -37,6 +37,7 @@
     "@types/react-dom": "^16.8.4",
     "@types/react-test-renderer": "^16.8.1",
     "@types/styled-components": "4.1.8",
+    "@types/superagent": "^4.1.1",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "babel-loader": "^8.0.5",
@@ -60,10 +61,12 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.16.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.8.4",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.0",
+    "superagent": "^5.0.5"
   }
 }

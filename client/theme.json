@@ -1,7 +1,10 @@
 {
   "black": "#444444",
+  "red": "#C4250B",
+  "blue": "#1F85DA",
   "lightgray": "#F0F0F0",
   "gray": "#D0D0D0",
+  "darkgray": "#A0A0A0",
   "white": "#FFFFFF",
   "pagePadding": "0px 75px"
 }

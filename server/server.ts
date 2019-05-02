@@ -1,5 +1,6 @@
 import express from 'express'
 import * as path from 'path'
+import bodyParser from 'body-parser'
 
 import { router as CodenamesRouter } from './Codenames/index'
 
@@ -22,6 +23,8 @@ if (process.env.NODE_ENV === 'production') {
 
   app.use(webpackHotMiddleware(compiler))
 }
+
+app.use(bodyParser.json())
 
 app.use('/codenames', CodenamesRouter)
 

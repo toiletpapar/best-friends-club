@@ -40,7 +40,7 @@ module.exports = merge.smart(common, {
     splitChunks: {
       cacheGroups: {
         vendor: {
-          test: /[\\/]node_modules[\\/](react|react-dom|styled-components)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|styled-components|superagent)[\\/]/,
           name: 'vendor',
           chunks: 'all',
         },

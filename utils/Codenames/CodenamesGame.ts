@@ -1,4 +1,4 @@
-enum Team {
+export enum Team {
   FIRSTTEAM = 'FIRSTTEAM',
   SECONDTEAM = 'SECONDTEAM',
   ASSASSIN = 'ASSASSIN',
@@ -6,19 +6,19 @@ enum Team {
   UNKNOWN = 'UNKNOWN'
 }
 
-enum GameState {
+export enum GameState {
   FIRSTTEAMWIN = 'FIRSTTEAMWIN',
   SECONDTEAMWIN = 'SECONDTEAMWIN',
   PLAYING = 'PLAYING'
 }
 
-interface Card {
+export interface Card {
   faction: Team;
   revealed: boolean;
   word: string;
 }
 
-interface GameData {
+export interface GameData {
   id: string;
   board: Card[];
   gameState: GameState;
@@ -26,7 +26,7 @@ interface GameData {
   score: Score;
 }
 
-interface Score {
+export interface Score {
   firstTeamScore: number;
   secondTeamScore: number;
 }
@@ -66,19 +66,19 @@ class CodenamesGame {
           revealed: false,
           word: dictionary[words[index]]
         }
-      } else if (index < index + CodenamesGame.NUM_SECONDTEAM_AGENTS) {
+      } else if (index < CodenamesGame.NUM_FIRSTTEAM_AGENTS + CodenamesGame.NUM_SECONDTEAM_AGENTS) {
         board[value] = {
           faction: Team.SECONDTEAM,
           revealed: false,
           word: dictionary[words[index]]
         }
-      } else if (index < index + CodenamesGame.NUM_BYSTANDERS) {
+      } else if (index < CodenamesGame.NUM_FIRSTTEAM_AGENTS + CodenamesGame.NUM_SECONDTEAM_AGENTS + CodenamesGame.NUM_BYSTANDERS) {
         board[value] = {
           faction: Team.BYSTANDER,
           revealed: false,
           word: dictionary[words[index]]
         }
-      } else if (index < index + CodenamesGame.NUM_ASSASSINS) {
+      } else if (index < CodenamesGame.NUM_FIRSTTEAM_AGENTS + CodenamesGame.NUM_SECONDTEAM_AGENTS + CodenamesGame.NUM_BYSTANDERS + CodenamesGame.NUM_ASSASSINS) {
         board[value] = {
           faction: Team.ASSASSIN,
           revealed: false,
@@ -168,27 +168,27 @@ class CodenamesGame {
     })
   }
 
-  // public getState(): GameData {
-  //   return {
-  //     id: this.id,
-  //     board: this.getClientBoardState(),
-  //     gameState: this.gameState,
-  //     currentTurn: this.currentTurn,
-  //     score: this.score
-  //   }
-  // }
-
   public getState(): GameData {
     return {
       id: this.id,
-      board: this.board,
+      board: this.getClientBoardState(),
       gameState: this.gameState,
       currentTurn: this.currentTurn,
       score: this.score
     }
   }
+
+  // public getState(): GameData {
+  //   return {
+  //     id: this.id,
+  //     board: this.board,
+  //     gameState: this.gameState,
+  //     currentTurn: this.currentTurn,
+  //     score: this.score
+  //   }
+  // }
 }
 
 export {
-  CodenamesGame
+  CodenamesGame,
 }

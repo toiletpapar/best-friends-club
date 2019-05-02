@@ -1,5 +1,11 @@
-import { CodenamesGame } from './CodenamesGame'
+import { 
+  CodenamesGame,
+  Team,
+  GameState,
+} from './CodenamesGame'
 
 export {
-  CodenamesGame
+  CodenamesGame,
+  Team,
+  GameState,
 }
