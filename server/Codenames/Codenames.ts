@@ -37,6 +37,14 @@ const getWord = (req: express.Request, res: express.Response, next: express.Next
   }
 }
 
+const playerView = (req: CodenameRequest, res: express.Response): void => {
+  res.json(req.game.getState())
+}
+
+const spymasterView = (req: CodenameRequest, res: express.Response): void => {
+  res.json(req.game.getSpymasterState())
+}
+
 const flipCard = (req: CodenameRequest, res: express.Response): void => {
   res.json(req.game.revealCard(req.word).getState())
 }
@@ -58,6 +66,8 @@ const removeGame = (req: CodenameRequest, res: express.Response): void => {
 export {
   createGame,
   getGame,
+  spymasterView,
+  playerView,
   getWord,
   flipCard,
   restartGame,

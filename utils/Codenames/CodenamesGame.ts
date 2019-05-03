@@ -178,15 +178,15 @@ class CodenamesGame {
     }
   }
 
-  // public getState(): GameData {
-  //   return {
-  //     id: this.id,
-  //     board: this.board,
-  //     gameState: this.gameState,
-  //     currentTurn: this.currentTurn,
-  //     score: this.score
-  //   }
-  // }
+  public getSpymasterState(): GameData {
+    return {
+      id: this.id,
+      board: this.board,
+      gameState: this.gameState,
+      currentTurn: this.currentTurn,
+      score: this.score
+    }
+  }
 }
 
 export {
