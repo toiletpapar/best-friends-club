@@ -2,13 +2,16 @@ import * as React from 'react'
 import styled from 'styled-components'
 import agent from 'superagent'
 
-import { Scoreboard } from './Scoreboard'
+import { getTeamColours } from './utils'
+import { SpymasterKey as SK } from './SpymasterKey'
+import { Scoreboard as SB } from './Scoreboard'
 import { Help } from './Help'
 
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 
 interface CodenamesState {
   game: GameData;
+  spymasterGame: GameData;
   helpOpen: boolean;
 }
 
@@ -18,7 +21,7 @@ interface CardProps {
 
 const Container = styled('div')`
   display: grid;
-  grid: [row1-start] "title title title title title" auto [row1-end]
+  grid: [row1-start] "score score score key key" auto [row1-end]
         [row2-start] ". . . . ." 100px [row2-end]
         [row3-start] ". . . . ." 100px [row3-end]
         [row4-start] ". . . . ." 100px [row4-end]
@@ -31,7 +34,7 @@ const Container = styled('div')`
 `
 
 const Button = styled('button')`
-  padding: 10px 25px;
+  padding: 10px 0px;
   width: 120px;
   margin: 0px 5px;
   border: none;
@@ -40,8 +43,17 @@ const Button = styled('button')`
   background-color: ${(props): string => props.theme.green};
 `
 
-const TitleContainer = styled('div')`
-  grid-area: title;
+const Scoreboard = styled(SB)`
+  grid-area: score;
+`
+
+const SpymasterKey = styled(SK)`
+  grid-area: key;
+  place-self: end;
+`
+
+const InvisibleKey = styled('div')`
+  grid-area: key;
 `
 
 const ButtonsContainer = styled('div')`
@@ -50,21 +62,7 @@ const ButtonsContainer = styled('div')`
 `
 
 const Card = styled('div')<CardProps>`
-  background-color: ${(props): string => {
-    if (props.team === Team.UNKNOWN) {
-      return props.theme.gray
-    } else if (props.team === Team.FIRSTTEAM) {
-      return props.theme.red
-    } else if (props.team === Team.SECONDTEAM) {
-      return props.theme.blue
-    } else if (props.team === Team.BYSTANDER) {
-      return props.theme.darkgray
-    } else if (props.team === Team.ASSASSIN) {
-      return props.theme.black
-    } else {
-      console.warn('Unknown team provided')
-    }
-  }};
+  background-color: ${getTeamColours};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,6 +74,7 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
     super(props)
     this.state = {
       game: null,
+      spymasterGame: null,
       helpOpen: false
     }
   }
@@ -117,11 +116,30 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
     agent.patch(`/codenames/${id}`).then(({body}): void => {
       this.setState({
         game: body,
+        spymasterGame: null
       })
     }).catch((err): void => {
       console.error('Unable to reset game')
       console.error(err)
     })
+  }
+
+  private toggleSpymaster = (id: string): any => (): void => {
+    if (!this.state.spymasterGame) {
+      agent.get(`/codenames/${id}/spymaster/board`).then(({body}): void => {
+        console.log(body)
+        this.setState({
+          spymasterGame: body
+        })
+      }).catch((err): void => {
+        console.error('Unable to reset game')
+        console.error(err)
+      })
+    } else {
+      this.setState({
+        spymasterGame: null
+      })
+    }
   }
 
   private toggleHelp = (): void => {
@@ -138,9 +156,8 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
     return (
       <React.Fragment>
         <Container>
-          <TitleContainer>
-            <Scoreboard game={this.state.game} />
-          </TitleContainer>
+          <Scoreboard game={this.state.game} />
+          { this.state.spymasterGame ? <SpymasterKey game={this.state.spymasterGame} /> : <InvisibleKey /> }
           {
             this.state.game.board.map((card): JSX.Element => {
               return (
@@ -150,6 +167,7 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
           }
           <ButtonsContainer>
             <Button onClick={this.toggleHelp}>Help</Button>
+            <Button onClick={this.toggleSpymaster(this.state.game.id)}>{this.state.spymasterGame ? 'Spymaster' : 'Field Operative'}</Button>
             <Button onClick={this.passTurn(this.state.game.id)}>Next Turn</Button>
             <Button onClick={this.resetGame(this.state.game.id)}>New Game</Button>
           </ButtonsContainer>

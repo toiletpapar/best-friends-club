@@ -1,5 +1,4 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
 const Help = (): JSX.Element => {
   return (
@@ -10,11 +9,11 @@ const Help = (): JSX.Element => {
       </section>
       <section>
         <h2>The Key</h2>
-        <p>Each game has one key that reveals the secret identities of the cards in the grid. Blue squares correspond to words that Blue Team must guess (blue agents). Red squares correspond to words that Red Team must guess (red agents). Pale squares are innocent bystanders, and the black square is an assassin who should never be contacted at all!</p>
+        <p>Each game has one key that reveals the secret identities of the cards in the grid (this is shown in the top-right corner for spymasters). Blue squares correspond to words that Blue Team must guess (blue agents). Red squares correspond to words that Red Team must guess (red agents). Pale squares are innocent bystanders, and the black square is an assassin who should never be contacted at all!</p>
       </section>
       <section>
         <h2>Game Overview</h2>
-        <p>Spymasters know the secret identities of 25 agents. Their teammates know the agents only by their codenames.</p>
+        <p>Spymasters have access to the key and know the secret identities of 25 agents. Their teammates know the agents only by their codenames.</p>
         <p>Spymasters take turns giving one-word clues. A clue may relate to multiple words on the table. The field operatives try to guess which words their spymaster menat. When a field operative clicks a word, the spymaster reveals its secret identitiy. If the field operatives guess correctly, they may continue guessing, until they run out of ideas for the given clue or until they hit a wrong person. Then it is the other team&apos;s turn to give a clue and guess. The first team to contact all their agents wins the game.</p>
       </section>
       <section>
