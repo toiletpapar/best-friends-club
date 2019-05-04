@@ -2,10 +2,14 @@ import * as React from 'react'
 import styled from 'styled-components'
 import agent from 'superagent'
 
-import { GameData, Team, GameState } from '../../utils/Codenames/CodenamesGame'
+import { Scoreboard } from './Scoreboard'
+import { Help } from './Help'
+
+import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 
 interface CodenamesState {
   game: GameData;
+  helpOpen: boolean;
 }
 
 interface CardProps {
@@ -28,6 +32,7 @@ const Container = styled('div')`
 
 const Button = styled('button')`
   padding: 10px 25px;
+  width: 120px;
   margin: 0px 5px;
   border: none;
   outline: none;
@@ -70,7 +75,8 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
   public constructor(props: {}) {
     super(props)
     this.state = {
-      game: null
+      game: null,
+      helpOpen: false
     }
   }
 
@@ -118,34 +124,42 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
     })
   }
 
+  private toggleHelp = (): void => {
+    this.setState({
+      helpOpen: !this.state.helpOpen
+    })
+  }
+
   public render (): JSX.Element {
     if (!this.state.game) {
       return (<div />)
     }
 
     return (
-      <Container>
-        <TitleContainer>
-          <h3>Spymaster</h3>
-          <div>Current Turn: {this.state.game.currentTurn === Team.FIRSTTEAM ? 'Red Team' : 'Blue Team'}</div>
-          <div>Red Team: {this.state.game.score.firstTeamScore}</div>
-          <div>Blue Team: {this.state.game.score.secondTeamScore}</div>
+      <React.Fragment>
+        <Container>
+          <TitleContainer>
+            <Scoreboard game={this.state.game} />
+          </TitleContainer>
           {
-            this.state.game.gameState === GameState.FIRSTTEAMWIN ? 'Red Team Wins' : this.state.game.gameState === GameState.SECONDTEAMWIN ? 'Blue Team Wins' : null
+            this.state.game.board.map((card): JSX.Element => {
+              return (
+                <Card key={card.word} team={card.faction} onClick={this.revealCard(this.state.game.id, card.word)}>{card.word}</Card>
+              )
+            })
           }
-        </TitleContainer>
+          <ButtonsContainer>
+            <Button onClick={this.toggleHelp}>Help</Button>
+            <Button onClick={this.passTurn(this.state.game.id)}>Next Turn</Button>
+            <Button onClick={this.resetGame(this.state.game.id)}>New Game</Button>
+          </ButtonsContainer>
+        </Container>
         {
-          this.state.game.board.map((card): JSX.Element => {
-            return (
-              <Card key={card.word} team={card.faction} onClick={this.revealCard(this.state.game.id, card.word)}>{card.word}</Card>
-            )
-          })
+          this.state.helpOpen && (
+            <Help />
+          )
         }
-        <ButtonsContainer>
-          <Button onClick={this.passTurn(this.state.game.id)}>Next Turn</Button>
-          <Button onClick={this.resetGame(this.state.game.id)}>New Game</Button>
-        </ButtonsContainer>
-      </Container>
+      </React.Fragment>
     )
   }
 }
