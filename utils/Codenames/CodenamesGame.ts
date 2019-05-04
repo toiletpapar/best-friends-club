@@ -102,6 +102,21 @@ class CodenamesGame {
     return this
   }
 
+  public passTurn(): CodenamesGame {
+    if (this.gameState !== GameState.PLAYING) {
+      console.warn('The game is already finished')
+      return this
+    }
+
+    if (this.currentTurn === Team.FIRSTTEAM) {
+      this.currentTurn = Team.SECONDTEAM
+    } else {
+      this.currentTurn = Team.FIRSTTEAM
+    }
+
+    return this
+  }
+
   public revealCard(word: string): CodenamesGame {
     if (this.gameState !== GameState.PLAYING) {
       console.warn('The game is already finished')
@@ -133,11 +148,17 @@ class CodenamesGame {
         ...this.score,
         firstTeamScore: this.score.firstTeamScore + 1
       }
+
+      this.currentTurn = Team.FIRSTTEAM
     } else if (card.faction === Team.SECONDTEAM) {
       this.score = {
         ...this.score,
         secondTeamScore: this.score.secondTeamScore + 1
       }
+
+      this.currentTurn = Team.SECONDTEAM
+    } else if (card.faction === Team.BYSTANDER) {
+      this.passTurn()
     } else if (card.faction === Team.ASSASSIN) {
       this.gameState = this.currentTurn === Team.SECONDTEAM ? GameState.FIRSTTEAMWIN : GameState.SECONDTEAMWIN
     }
@@ -148,9 +169,6 @@ class CodenamesGame {
     } else if (this.score.secondTeamScore === CodenamesGame.NUM_SECONDTEAM_AGENTS) {
       this.gameState = GameState.SECONDTEAMWIN
     }
-
-    // Update the current turn
-    this.currentTurn = this.currentTurn === Team.FIRSTTEAM ? Team.SECONDTEAM : Team.FIRSTTEAM
 
     return this
   }

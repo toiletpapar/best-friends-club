@@ -10,6 +10,7 @@ router.get('/:id/player/board', Codenames.playerView)
 router.get('/:id/spymaster/board', Codenames.spymasterView)
 router.post('/', Codenames.createGame)
 router.patch('/:id/player/board/:word', Codenames.flipCard)
+router.patch('/:id/turn', Codenames.passTurn)
 router.patch('/:id', Codenames.restartGame)
 router.delete('/:id', Codenames.removeGame)
 

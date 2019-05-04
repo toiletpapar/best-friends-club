@@ -28,6 +28,7 @@ const Container = styled('div')`
 
 const Button = styled('button')`
   padding: 10px 25px;
+  margin: 0px 5px;
   border: none;
   outline: none;
   cursor: pointer;
@@ -95,6 +96,17 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
     })
   }
 
+  private passTurn = (id: string): any => (): void => {
+    agent.patch(`/codenames/${id}/turn`).then(({body}): void => {
+      this.setState({
+        game: body,
+      })
+    }).catch((err): void => {
+      console.error('Unable to pass turn')
+      console.log(err)
+    })
+  }
+
   private resetGame = (id: string): any => (): void => {
     agent.patch(`/codenames/${id}`).then(({body}): void => {
       this.setState({
@@ -130,6 +142,7 @@ class Codenames extends React.PureComponent<{}, CodenamesState> {
           })
         }
         <ButtonsContainer>
+          <Button onClick={this.passTurn(this.state.game.id)}>Next Turn</Button>
           <Button onClick={this.resetGame(this.state.game.id)}>New Game</Button>
         </ButtonsContainer>
       </Container>

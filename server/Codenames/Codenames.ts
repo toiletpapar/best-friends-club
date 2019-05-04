@@ -45,6 +45,10 @@ const spymasterView = (req: CodenameRequest, res: express.Response): void => {
   res.json(req.game.getSpymasterState())
 }
 
+const passTurn = (req: CodenameRequest, res: express.Response): void => {
+  res.json(req.game.passTurn().getState())
+}
+
 const flipCard = (req: CodenameRequest, res: express.Response): void => {
   res.json(req.game.revealCard(req.word).getState())
 }
@@ -69,6 +73,7 @@ export {
   spymasterView,
   playerView,
   getWord,
+  passTurn,
   flipCard,
   restartGame,
   removeGame
