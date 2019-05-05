@@ -4,6 +4,16 @@ const Help = (): JSX.Element => {
   return (
     <div>
       <section>
+        <h2>TL;DR</h2>
+        <ul>
+          <li>There are two teams. Each team chooses one spymaster.</li>
+          <li><strong>Spymaster:</strong> On your turn, give a one word clue and the number corresponding to how many words that clue relates to.</li>
+          <li><strong>Field Operatives:</strong> Try to guess the words that relate to the clue given by your spymaster. You can keep guessing for as long as your answers are correct.</li>
+          <li>Your team wins when all the words of your teams colour are guessed. Only the spymaster has knows which words belong to which colour.</li>
+          <li>If you guess the assassin, you lose!</li>
+        </ul>
+      </section>
+      <section>
         <h2>Setup</h2>
         <p>Players split up into two teams of similar size and skill. You need at least four players (two teams of two) for a standard game. Variants for two or three players can be found in the sections below. Each team chooses one player to be their spymaster.</p>
       </section>
@@ -30,6 +40,28 @@ const Help = (): JSX.Element => {
         <h2>One word</h2>
         <p>Your clue must be only one word. You are not allowed to give extra hints. For example, don&apos;t say, &#34;This may be a bit of a stretch...&#34; You are playing Codenames. It&apos;s always a bit of a stretch.</p>
         <p>Your clue cannot be any of the codenames visible on the table. On later turns, some codenames will be covered up, so a clue that is not legal now might be legal later.</p>
+      </section>
+      <section>
+        <h2>Making Contact</h2>
+        <p>When the spymaster gives a clue, his or her field operatives try to figure out what it means. They can debate it amongst themselves, but the spymaster must keep a straight face. The operatives indicate their official guess when one of them clicks one of the codenames on the table.</p>
+        <ul>
+          <li>
+            <p>If the field operative clicks on <strong>a card belonging to his or her team</strong>, the word will be highlighted in your teams colour. <strong>The operatives get another guess ( but not another clue).</strong></p>
+          </li>
+          <li>
+            <p>If the field operative clicks on <strong>an innocent bystander</strong>, the word will be highlighted in the bystander colour. <strong>This ends the turn.</strong></p>
+          </li>
+          <li>
+            <p>If the field operative clicks on <strong>a card belonging to the other team</strong>, the word will be highlighted by the opposing team&apos;s colour. <strong>This ends the turn.</strong> (And it helps the other team.)</p>
+          </li>
+          <li>
+            <p>If the field operative clicks on <strong>the assassin</strong>, the word is highlighted with the assasin&apos;s colour. This ends the game! <strong>The team that contacted the assassin loses.</strong></p>
+          </li>
+        </ul>
+        <p><strong>Tip:</strong> Before saying your clue out loud, make sure it doesn&apos;t relate to the assassin.</p>
+      </section>
+      <section>
+        <h2>Number of Guesses</h2>
       </section>
     </div>
   )
