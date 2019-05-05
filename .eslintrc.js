@@ -20,6 +20,7 @@ module.exports = {
   },
   'plugins': [
     'react',
+    'react-hooks',
     '@typescript-eslint'
   ],
   'rules': {
@@ -27,7 +28,9 @@ module.exports = {
     'indent': 'off',
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/no-explicit-any': 'off',
-    'no-console': 'off'
+    'no-console': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn'
   },
   'settings': {
     'react': {

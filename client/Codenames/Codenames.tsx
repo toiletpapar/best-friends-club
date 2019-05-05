@@ -9,6 +9,10 @@ import { Help } from './Help'
 
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 
+interface CodenamesProps {
+  gameID: string;
+}
+
 interface CodenamesState {
   game: GameData;
   spymasterGame: GameData;
@@ -69,117 +73,110 @@ const Card = styled('div')<CardProps>`
   cursor: pointer;
 `
 
-class Codenames extends React.PureComponent<{}, CodenamesState> {
-  public constructor(props: {}) {
-    super(props)
-    this.state = {
-      game: null,
-      spymasterGame: null,
-      helpOpen: false
+const useCodenamesGame = (gameID: string): [GameData, React.Dispatch<React.SetStateAction<GameData>>] => {
+  const [game, setGame] = React.useState<GameData>(null)
+
+  React.useEffect((): void => {
+    if (gameID) {
+      agent.get(`/codenames/${gameID}/player/board`).then(({body}): void => {
+        setGame(body)
+      }).catch((err): void => {
+        console.error(`Unable to find game with gameID ${gameID}`)
+        console.error(err)
+      })
     }
-  }
+  }, [gameID])
 
-  public componentDidMount (): void {
-    agent.post('/codenames').then(({body}): void => {
-      this.setState({
-        game: body,
-      })
-    }).catch((err): void => {
-      console.error('Unable to initialize codenames game')
-      console.error(err)
-    })
-  }
+  return [game, setGame]
+}
 
-  private revealCard = (id: string, word: string): any => (): void => {
-    agent.patch(`/codenames/${id}/player/board/${word}`).then(({body}): void => {
-      this.setState({
-        game: body,
-      })
-    }).catch((err): void => {
-      console.error('Unable to reveal card')
-      console.error(err)
-    })
-  }
+const revealCard = (id: string, word: string, setGame: React.Dispatch<React.SetStateAction<GameData>>): () => void => (): void => {
+  agent.patch(`/codenames/${id}/player/board/${word}`).then(({body}): void => {
+    setGame(body)
+  }).catch((err): void => {
+    console.error('Unable to reveal card')
+    console.error(err)
+  })
+}
 
-  private passTurn = (id: string): any => (): void => {
-    agent.patch(`/codenames/${id}/turn`).then(({body}): void => {
-      this.setState({
-        game: body,
-      })
-    }).catch((err): void => {
-      console.error('Unable to pass turn')
-      console.log(err)
-    })
-  }
+const passTurn = (id: string, setGame: React.Dispatch<React.SetStateAction<GameData>>): () => void => (): void => {
+  agent.patch(`/codenames/${id}/turn`).then(({body}): void => {
+    setGame(body)
+  }).catch((err): void => {
+    console.error('Unable to pass turn')
+    console.log(err)
+  })
+}
 
-  private resetGame = (id: string): any => (): void => {
-    agent.patch(`/codenames/${id}`).then(({body}): void => {
-      this.setState({
-        game: body,
-        spymasterGame: null
-      })
+const resetGame = (id: string, setGame: React.Dispatch<React.SetStateAction<GameData>>, setSpymasterGame: React.Dispatch<React.SetStateAction<GameData>>): () => void => (): void => {
+  agent.patch(`/codenames/${id}`).then(({body}): void => {
+    setGame(body)
+    setSpymasterGame(null)
+  }).catch((err): void => {
+    console.error('Unable to reset game')
+    console.error(err)
+  })
+}
+
+const toggleSpymaster = (id: string, spymasterGame: GameData, setSpymasterGame: React.Dispatch<React.SetStateAction<GameData>>): () => void => (): void => {
+  if (!spymasterGame) {
+    agent.get(`/codenames/${id}/spymaster/board`).then(({body}): void => {
+      setSpymasterGame(body)
     }).catch((err): void => {
       console.error('Unable to reset game')
       console.error(err)
     })
+  } else {
+    setSpymasterGame(null)
   }
+}
 
-  private toggleSpymaster = (id: string): any => (): void => {
-    if (!this.state.spymasterGame) {
-      agent.get(`/codenames/${id}/spymaster/board`).then(({body}): void => {
-        console.log(body)
-        this.setState({
-          spymasterGame: body
-        })
-      }).catch((err): void => {
-        console.error('Unable to reset game')
-        console.error(err)
-      })
-    } else {
-      this.setState({
-        spymasterGame: null
-      })
+const useToggle = (initialState: boolean): [boolean, () => void] => {
+  const [property, setter] = React.useState(initialState)
+
+  return [
+    property,
+    (): void => {
+      setter(!property)
     }
+  ]
+}
+
+const Codenames = (props: CodenamesProps): JSX.Element => {
+  const [game, setGame] = useCodenamesGame(props.gameID)
+  const [spymasterGame, setSpymasterGame] = React.useState<GameData>(null)
+  const [helpOpen, toggleHelp] = useToggle(false)
+
+  if (!game) {
+    return (<div />)
   }
 
-  private toggleHelp = (): void => {
-    this.setState({
-      helpOpen: !this.state.helpOpen
-    })
-  }
-
-  public render (): JSX.Element {
-    if (!this.state.game) {
-      return (<div />)
-    }
-
-    return (
-      <React.Fragment>
-        <Container>
-          <Scoreboard game={this.state.game} />
-          { this.state.spymasterGame ? <SpymasterKey game={this.state.spymasterGame} /> : <InvisibleKey /> }
-          {
-            this.state.game.board.map((card): JSX.Element => {
-              return (
-                <Card key={card.word} team={card.faction} onClick={this.revealCard(this.state.game.id, card.word)}>{card.word}</Card>
-              )
-            })
-          }
-          <ButtonsContainer>
-            <Button onClick={this.toggleHelp}>Help</Button>
-            <Button onClick={this.toggleSpymaster(this.state.game.id)}>{this.state.spymasterGame ? 'Spymaster' : 'Field Operative'}</Button>
-            <Button onClick={this.passTurn(this.state.game.id)}>Next Turn</Button>
-            <Button onClick={this.resetGame(this.state.game.id)}>New Game</Button>
-          </ButtonsContainer>
-        </Container>
+  return (
+    <React.Fragment>
+      <Container>
+        <Scoreboard game={game} />
+        { spymasterGame ? <SpymasterKey game={spymasterGame} /> : <InvisibleKey /> }
         {
-          this.state.helpOpen && (
-            <Help />
-          )
+          game.board.map((card): JSX.Element => {
+            return (
+              <Card key={card.word} team={card.faction} onClick={revealCard(game.id, card.word, setGame)}>{card.word}</Card>
+            )
+          })
         }
-      </React.Fragment>
-    )
-  }
+        <ButtonsContainer>
+          <Button onClick={toggleHelp}>Help</Button>
+          <Button onClick={toggleSpymaster(game.id, spymasterGame, setSpymasterGame)}>{spymasterGame ? 'Spymaster' : 'Field Operative'}</Button>
+          <Button onClick={passTurn(game.id, setGame)}>Next Turn</Button>
+          <Button onClick={resetGame(game.id, setGame, setSpymasterGame)}>New Game</Button>
+        </ButtonsContainer>
+      </Container>
+      {
+        helpOpen && (
+          <Help />
+        )
+      }
+    </React.Fragment>
+  )
 }
 
 export {
