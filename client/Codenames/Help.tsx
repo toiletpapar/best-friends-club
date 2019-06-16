@@ -62,7 +62,17 @@ const Help = (): JSX.Element => {
       </section>
       <section>
         <h2>Number of Guesses</h2>
+        <p>
+          <strong>The field operatives must always make at least one guess.</strong> Any wrong guess ends the turn immediately, but if the field operatives guess a word of their team&apos;s colours, they can keep guessing.
+        </p>
+        <p>
+          <strong>You can stop guessing at any time</strong>, but usually you want to guess as many words as the spymaster said. Sometimes you might even want to guess <strong>one more:</strong>
+        </p>
+        <p>
+          <strong>You are allowed only one extra guess.</strong> If the clue is &quot;river 3&quot; then the operatives have at most 4 guesses.
+        </p>
       </section>
+      <section>You can find more detailed rules <a target='_blank' rel='noopener noreferrer' href="http://www.boardgamecapital.com/game_rules/codenames.pdf">here</a></section>
     </div>
   )
 }
