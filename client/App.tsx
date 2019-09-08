@@ -4,12 +4,12 @@ import * as React from 'react'
 import { ThemeProvider } from 'styled-components'
 import theme from './theme.json'
 
-import { Home } from './Home/index'
+import { AppRouter } from './Router'
 
 const App = (): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
-      <Home />
+      <AppRouter />
     </ThemeProvider>
   )
 }
