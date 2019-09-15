@@ -6,6 +6,17 @@ module.exports = merge.smart(common, {
   mode: 'production',
   target: 'web',
   devtool: 'cheap-module-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        include: [
+          path.resolve(__dirname, './client'),
+        ],
+        use: ['file-loader']
+      }
+    ]
+  },
   plugins: [
     new webpack.HashedModuleIdsPlugin()
   ]

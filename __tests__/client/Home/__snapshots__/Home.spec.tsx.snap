@@ -2,17 +2,40 @@
 
 exports[`#Home should render correctly 1`] = `
 <div
-  className="sc-iwsKbI jeFprC"
+  className="sc-VigVT jweSbk"
 >
   <div
-    className="sc-gqjmRU IZkku sc-bdVaJa eIINhK"
+    className="sc-fjdhpX leoPZk sc-gqjmRU hKLFpj"
   >
-    Hello World
+    <img
+      src="test-file-stub"
+    />
+    <a
+      className="sc-dnqmqq jFCsgM"
+      href="/"
+      onClick={[Function]}
+    >
+      Lobby
+    </a>
   </div>
   <div
-    className="sc-gZMcBi iphAKQ"
+    className="sc-jTzLTM loGiWm"
   >
-    <div />
+    <ul
+      className="sc-iwsKbI fDRDBx"
+    />
+    <button
+      onClick={[Function]}
+    >
+      Create Game
+    </button>
+    <a
+      className="sc-dnqmqq jFCsgM"
+      href="/codenames/"
+      onClick={[Function]}
+    >
+      Join Game
+    </a>
   </div>
 </div>
 `;

@@ -17,6 +17,24 @@ module.exports = merge.smart(common, {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        include: [
+          path.resolve(__dirname, './client'),
+        ],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]?[contenthash]',
+            }
+          }
+        ]
+      }
+    ]
+  },
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
