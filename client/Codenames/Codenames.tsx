@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import agent from 'superagent'
+import {RouteComponentProps} from 'react-router-dom'
 
 import { getTeamColours } from './utils'
 import { SpymasterKey as SK } from './SpymasterKey'
@@ -9,14 +10,8 @@ import { Help } from './Help'
 
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 
-interface CodenamesProps {
+interface CodenamesRouterProps {
   gameID: string;
-}
-
-interface CodenamesState {
-  game: GameData;
-  spymasterGame: GameData;
-  helpOpen: boolean;
 }
 
 interface CardProps {
@@ -142,8 +137,8 @@ const useToggle = (initialState: boolean): [boolean, () => void] => {
   ]
 }
 
-const Codenames = (props: CodenamesProps): JSX.Element => {
-  const [game, setGame] = useCodenamesGame(props.gameID)
+const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Element => {
+  const [game, setGame] = useCodenamesGame(props.match.params.gameID)
   const [spymasterGame, setSpymasterGame] = React.useState<GameData>(null)
   const [helpOpen, toggleHelp] = useToggle(false)
 
