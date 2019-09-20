@@ -1,6 +1,9 @@
 # best-friends-club
 A gathering place for the best of friends
 
+## TODO
+Hold game list server-side. Cap at 50 games.
+
 ## Roadmap
 1. Add codename tests
 2. Add server-side HMR (working but too many hot update files in build)
