@@ -1,5 +1,8 @@
-import { Link } from './Link'
+import { Link, LinkButton } from './Link'
+import { Button } from './Button'
 
 export {
-  Link
+  Link,
+  LinkButton,
+  Button
 }
