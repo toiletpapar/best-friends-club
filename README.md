@@ -2,7 +2,7 @@
 A gathering place for the best of friends
 
 ## TODO
-Hold game list server-side. Cap at 50 games.
+Give human readable names to the games. Auto-generate a fun name from a word bank as default and allow users to create their own game name through a modal.
 
 ## Roadmap
 1. Add codename tests

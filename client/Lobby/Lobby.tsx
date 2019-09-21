@@ -3,14 +3,16 @@ import * as agent from 'superagent'
 
 import { LinkButton, Button } from '../common/index'
 import { GameIDList } from './GameIDList'
+import { GameData } from '../../utils/Codenames/CodenamesGame'
 
+// Create a game and update the game's list
 const createGame = (
   gameIDs: string[],
-  setGameID: React.Dispatch<React.SetStateAction<string[]>>
+  setGameIDs: React.Dispatch<React.SetStateAction<string[]>>
 ): () => void => {
   return (): void => {
     agent.post('/codenames').then(({body}): void => {
-      setGameID([...gameIDs, body.id])
+      setGameIDs([...gameIDs, body.id])
     }).catch((err): void => {
       console.error('Unable to initialize codenames game')
       console.error(err)
@@ -18,9 +20,25 @@ const createGame = (
   }
 }
 
+// Retrieve the game's list from the server
+const useGameIDs = (
+  setGameIDs: React.Dispatch<React.SetStateAction<string[]>>
+): void => {
+  React.useEffect((): void => {
+    agent.get('/codenames').then(({body}): void => {
+      setGameIDs(body.map((game: GameData): string => game.id))
+    }).catch((err): void => {
+      console.error('Unable to retrieve codenames game list')
+      console.error(err)
+    })
+  }, [setGameIDs])
+}
+
 const Lobby = (): JSX.Element => {
-  const [gameIDs, setGameID] = React.useState<string[]>([])
+  const [gameIDs, setGameIDs] = React.useState<string[]>([])
   const [selectedGameID, setSelectedGameID] = React.useState<string>('')
+
+  useGameIDs(setGameIDs)
 
   return (
     <React.Fragment>
@@ -31,7 +49,7 @@ const Lobby = (): JSX.Element => {
         onGameIDSelected={setSelectedGameID}
         selectedGameID={selectedGameID}
       />
-      <Button left onClick={createGame(gameIDs, setGameID)}>Create Game</Button>
+      <Button left onClick={createGame(gameIDs, setGameIDs)}>Create Game</Button>
       <LinkButton to={`/codenames/${selectedGameID}`}>Join Game</LinkButton>
     </React.Fragment>
   )

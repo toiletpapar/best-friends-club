@@ -1,6 +1,8 @@
 import express from 'express'
 import { CodenamesGame } from '../../utils/Codenames/index'
 
+const MAX_GAMES = 50
+
 interface CodenameRequest extends express.Request {
   game?: CodenamesGame;
   word?: string;
@@ -8,10 +10,21 @@ interface CodenameRequest extends express.Request {
 
 const games: CodenamesGame[] = []
 
+const getGames = (req: express.Request, res: express.Response): void => {
+  res.json(games)
+  return
+}
+
 const createGame = (req: express.Request, res: express.Response): void => {
-  const game = new CodenamesGame()
-  games.push(game)
-  res.json(game.getState())
+  if (games.length < MAX_GAMES) {
+    const game = new CodenamesGame()
+    games.push(game)
+    res.json(game.getState())
+    return
+  } else {
+    res.status(403).send('Too many games')
+    return
+  }
 }
 
 const getGame = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
@@ -70,6 +83,7 @@ const removeGame = (req: CodenameRequest, res: express.Response): void => {
 export {
   createGame,
   getGame,
+  getGames,
   spymasterView,
   playerView,
   getWord,
