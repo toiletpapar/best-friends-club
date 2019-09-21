@@ -1,7 +1,8 @@
 import * as React from 'react'
 import * as agent from 'superagent'
+import { RouteComponentProps } from 'react-router'
 
-import { LinkButton, Button } from '../common/index'
+import { Button } from '../common/index'
 import { GameIDList } from './GameIDList'
 import { GameData } from '../../utils/Codenames/CodenamesGame'
 
@@ -34,7 +35,7 @@ const useGameIDs = (
   }, [setGameIDs])
 }
 
-const Lobby = (): JSX.Element => {
+const Lobby = (props: RouteComponentProps<{}>): JSX.Element => {
   const [gameIDs, setGameIDs] = React.useState<string[]>([])
   const [selectedGameID, setSelectedGameID] = React.useState<string>('')
 
@@ -50,7 +51,7 @@ const Lobby = (): JSX.Element => {
         selectedGameID={selectedGameID}
       />
       <Button left onClick={createGame(gameIDs, setGameIDs)}>Create Game</Button>
-      <LinkButton to={`/codenames/${selectedGameID}`}>Join Game</LinkButton>
+      <Button onClick={(): void => props.history.push(`/codenames/${selectedGameID}`)}>Join Game</Button>
     </React.Fragment>
   )
 }

@@ -16,6 +16,7 @@ interface Highlight {
 }
 
 const GameID = styled('li')<Highlight>`
+  cursor: pointer;
   ${(props): string => props.active && `background-color: ${props.theme.darkgray}`}
 `
 
