@@ -1,0 +1,44 @@
+import React from 'react'
+import styled from 'styled-components'
+
+interface TextInputProps extends React.HTMLProps<HTMLInputElement> {
+  title: string;
+  onUpdate?: (text: string) => void;
+}
+
+const Input = styled('input')`
+  border: none;
+  border-bottom: 1px solid ${(props): string => props.theme.gray};
+`
+const Label = styled('label')`
+  color: black;
+`
+
+const createOnChange = (props: TextInputProps): (event: React.ChangeEvent<HTMLInputElement>) => void => (event: React.ChangeEvent<HTMLInputElement>): void => {
+  if (props.onChange) {
+    props.onChange(event)
+  }
+
+  if (props.onUpdate) {
+    props.onUpdate(event.target.value)
+  }
+}
+
+const TextInput = (props: TextInputProps): JSX.Element => {
+  const {
+    name,
+    title,
+    value,
+  } = props
+
+  return (
+    <React.Fragment>
+      <Label htmlFor={name}>{title}</Label>
+      <Input name={name} onChange={createOnChange(props)} value={value} />
+    </React.Fragment>
+  )
+}
+
+export {
+  TextInput,
+}

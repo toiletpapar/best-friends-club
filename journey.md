@@ -41,3 +41,15 @@ When trying to use our test renderer (`react-test-renderer`) on a component that
 
 *What worked*
 Wrap the component in a `MemoryRouter` or `StaticRouter`. These routers provide specific utilities for testing (per the docs). I didn't try to use a `BrowserRouter` because it wasn't specified in the docs and I figured sticking a browser context in a server environment would lead to bad times. So far so good, we'll see whether this method is scalable or causes other downstream issues.
+
+## Modals and Dialogs
+I wanted to use dialogs to handle most of my form inputs. Some of the things I encountered were:
+
+### Using React Portal
+This is the method of building out an element and attaching it to another part of the DOM specified by the developer (as opposed to the nearest parent element).
+
+### Focus
+Something that's important to note is that modals can mess up focus and that can be a problem for accessibility. We need to figure out a way for "background" elements to not take focus even though they're rendered while the modal is showing. Somebody has solved that for us in the form of `react-modal` and `react-aria-modal`. Unfortuantely my attempt at `Modal` leaves something to be desired in terms of focus and accessibility.
+
+### Jest doesn't know what to do with the document global
+We're mostly testing client-side code (so far). So lets make the test environment in `jest.config.js` a client-like enviornment. The default `testEnvironment` is `jsdom`.

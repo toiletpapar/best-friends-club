@@ -1,5 +1,6 @@
 import express from 'express'
 import { CodenamesGame } from '../../utils/Codenames/index'
+import { GameData } from '../../utils/Codenames/CodenamesGame'
 
 const MAX_GAMES = 50
 
@@ -11,13 +12,18 @@ interface CodenameRequest extends express.Request {
 const games: CodenamesGame[] = []
 
 const getGames = (req: express.Request, res: express.Response): void => {
-  res.json(games)
+  res.json(games.map((game): GameData => game.getState()))
   return
 }
 
 const createGame = (req: express.Request, res: express.Response): void => {
+  if (!req.body.name) {
+    res.status(400).send('No game name provided')
+    return
+  }
+
   if (games.length < MAX_GAMES) {
-    const game = new CodenamesGame()
+    const game = new CodenamesGame(req.body.name)
     games.push(game)
     res.json(game.getState())
     return

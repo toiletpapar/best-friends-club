@@ -1,6 +1,7 @@
 const merge = require('webpack-merge')
 const common = require('./webpack.common.web.js')
 const webpack = require('webpack')
+const path = require('path')
 
 module.exports = merge.smart(common, {
   mode: 'production',

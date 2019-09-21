@@ -8,8 +8,6 @@ import { Nav as el } from '../Nav/index'
 
 const Background = styled('div')`
   background-color: ${(props): string => props.theme.lightgray};
-  font-size: 12px;
-  font-family: sans-serif;
   min-height: 100vh;
   height: 100%;
   display: grid;

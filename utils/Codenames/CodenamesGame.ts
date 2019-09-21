@@ -11,7 +11,6 @@ export enum GameState {
   SECONDTEAMWIN = 'SECONDTEAMWIN',
   PLAYING = 'PLAYING'
 }
-
 export interface Card {
   faction: Team;
   revealed: boolean;
@@ -20,6 +19,7 @@ export interface Card {
 
 export interface GameData {
   id: string;
+  name: string;
   board: Card[];
   gameState: GameState;
   currentTurn: Team.FIRSTTEAM | Team.SECONDTEAM;
@@ -42,15 +42,17 @@ class CodenamesGame {
   private static NUM_ASSASSINS: number = 1
 
   private id: string
+  private name: string
   private prng: PRNG
   private board: Card[]
   private gameState: GameState
   private currentTurn: Team.FIRSTTEAM | Team.SECONDTEAM
   private score: Score
 
-  public constructor() {
+  public constructor(name: string) {
     this.prng = new PRNG()
     this.id = this.prng.getID()
+    this.name = name
     this.setupGame()
   }
 
@@ -189,6 +191,7 @@ class CodenamesGame {
   public getState(): GameData {
     return {
       id: this.id,
+      name: this.name,
       board: this.getClientBoardState(),
       gameState: this.gameState,
       currentTurn: this.currentTurn,
@@ -199,6 +202,7 @@ class CodenamesGame {
   public getSpymasterState(): GameData {
     return {
       id: this.id,
+      name: this.name,
       board: this.board,
       gameState: this.gameState,
       currentTurn: this.currentTurn,

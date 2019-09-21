@@ -2,12 +2,13 @@
 
 exports[`#Home should render correctly 1`] = `
 <div
-  className="sc-VigVT jweSbk"
+  className="sc-dxgOiQ fnNCjc"
 >
   <div
-    className="sc-fjdhpX leoPZk sc-gqjmRU hKLFpj"
+    className="sc-jKJlTe jqwgMa sc-kpOJdX jSpUW"
   >
     <img
+      className="sc-kGXeez jzbGIe"
       src="test-file-stub"
     />
     <a
@@ -19,23 +20,37 @@ exports[`#Home should render correctly 1`] = `
     </a>
   </div>
   <div
-    className="sc-jTzLTM loGiWm"
+    className="sc-ckVGcZ lbASTC"
   >
+    <h3
+      className="sc-fjdhpX cQEeDA"
+    >
+      Codenames
+    </h3>
+    <p>
+      Choose a game from the list below or create your own.
+    </p>
     <ul
-      className="sc-iwsKbI fDRDBx"
-    />
+      className="sc-jzJRlG lkdUhq"
+    >
+      <li
+        className="sc-cSHVUG enaHVM"
+      >
+        Unable to find any games. Why not create one?
+      </li>
+    </ul>
     <button
+      className="sc-iwsKbI izFQUc"
       onClick={[Function]}
     >
       Create Game
     </button>
-    <a
-      className="sc-dnqmqq jFCsgM"
-      href="/codenames/"
+    <button
+      className="sc-iwsKbI jvsbIL"
       onClick={[Function]}
     >
       Join Game
-    </a>
+    </button>
   </div>
 </div>
 `;
