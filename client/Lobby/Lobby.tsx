@@ -68,8 +68,6 @@ const Lobby = (props: RouteComponentProps<{}>): JSX.Element => {
   useGames(setGames)
 
   const generateNameAndOpen = (): void => {
-    console.log('huh')
-    console.log(`${adjectives[prng.getRandomNumber(0, adjectives.length)]} ${dictionary[prng.getRandomNumber(0, dictionary.length)]}`)
     setGameName(`${adjectives[prng.getRandomNumber(0, adjectives.length)]} ${dictionary[prng.getRandomNumber(0, dictionary.length)]}`)
     setIsOpen(true)
   }

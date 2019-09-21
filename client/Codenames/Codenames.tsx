@@ -7,6 +7,7 @@ import { getTeamColours } from './utils'
 import { SpymasterKey as SK } from './SpymasterKey'
 import { Scoreboard as SB } from './Scoreboard'
 import { Help } from './Help'
+import { Button } from '../common'
 
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 
@@ -30,16 +31,6 @@ const Container = styled('div')`
         / 1fr 1fr 1fr 1fr 1fr;
   row-gap: 10px;
   column-gap: 10px;
-`
-
-const Button = styled('button')`
-  padding: 10px 0px;
-  width: 120px;
-  margin: 0px 5px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  background-color: ${(props): string => props.theme.green};
 `
 
 const Scoreboard = styled(SB)`
@@ -149,7 +140,7 @@ const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Elemen
   return (
     <React.Fragment>
       <Container>
-        <Scoreboard game={game} />
+        <Scoreboard isSpymaster={!!spymasterGame} game={game} />
         { spymasterGame ? <SpymasterKey game={spymasterGame} /> : <InvisibleKey /> }
         {
           game.board.map((card): JSX.Element => {
@@ -160,7 +151,7 @@ const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Elemen
         }
         <ButtonsContainer>
           <Button onClick={toggleHelp}>Help</Button>
-          <Button onClick={toggleSpymaster(game.id, spymasterGame, setSpymasterGame)}>{spymasterGame ? 'Spymaster' : 'Field Operative'}</Button>
+          <Button onClick={toggleSpymaster(game.id, spymasterGame, setSpymasterGame)}>{spymasterGame ? 'Operative View' : 'Spymaster View'}</Button>
           <Button onClick={passTurn(game.id, setGame)}>Next Turn</Button>
           <Button onClick={resetGame(game.id, setGame, setSpymasterGame)}>New Game</Button>
         </ButtonsContainer>
