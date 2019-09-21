@@ -2,7 +2,7 @@
 A gathering place for the best of friends
 
 ## TODO
-Give human readable names to the games. Auto-generate a fun name from a word bank as default and allow users to create their own game name through a modal.
+Add sockets for interactive game
 
 ## Roadmap
 1. Add codename tests
