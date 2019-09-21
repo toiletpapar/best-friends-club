@@ -8,6 +8,7 @@ const List = styled('ul')`
   border-radius: 5px;
   overflow-y: auto;
   padding: 5px;
+  background-color: white;
 `
 
 interface Highlight {
@@ -19,12 +20,12 @@ const GameID = styled('li')<Highlight>`
 `
 
 interface GameIDListProps {
-  gameIDs: string[]
-  onGameIDSelected: (gameID: string) => void 
-  selectedGameID?: string
+  gameIDs: string[];
+  onGameIDSelected: (gameID: string) => void;
+  selectedGameID?: string;
 }
 
-const GameIDList = (props: GameIDListProps) => {
+const GameIDList = (props: GameIDListProps): JSX.Element => {
   return (
     <List>
       {
