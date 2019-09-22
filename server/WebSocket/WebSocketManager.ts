@@ -17,13 +17,6 @@ class WebSocketManager {
 
     this.wsServers.push({id, wss})
 
-    wss.on('connection', (ws): void => {
-      console.log('Hello Server!')
-      console.log(id)
-
-      ws.send('Hello Client!')
-    })
-
     return wss
   }
 

@@ -38,19 +38,6 @@ const createGame = (
   gameName: string,
 ): void => {
   agent.post('/codenames').send({name: gameName}).then(({body}): void => {
-    // Create WebSocket connection.
-    const socket = new WebSocket(`ws://localhost:8080/codenames/socket/${body.id}`)
-
-    // Connection opened
-    socket.addEventListener('open', (): void => {
-      socket.send('Hello Server!')
-    })
-
-    // Listen for messages
-    socket.addEventListener('message', (event): void => {
-      console.log('Message from server ', event.data)
-    })
-
     setGames([...games, body])
   }).catch((err): void => {
     console.error('Unable to initialize codenames game')
