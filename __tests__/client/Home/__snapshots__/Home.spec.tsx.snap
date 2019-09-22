@@ -2,17 +2,17 @@
 
 exports[`#Home should render correctly 1`] = `
 <div
-  className="sc-dxgOiQ fnNCjc"
+  className="sc-kpOJdX dwuSAM"
 >
   <div
-    className="sc-jKJlTe jqwgMa sc-kpOJdX jSpUW"
+    className="sc-ckVGcZ igByRx sc-kGXeez efwses"
   >
     <img
-      className="sc-kGXeez jzbGIe"
+      className="sc-kgoBCf yAQSK"
       src="test-file-stub"
     />
     <a
-      className="sc-dnqmqq jFCsgM"
+      className="sc-htpNat eRbzCA"
       href="/"
       onClick={[Function]}
     >
@@ -20,10 +20,10 @@ exports[`#Home should render correctly 1`] = `
     </a>
   </div>
   <div
-    className="sc-ckVGcZ lbASTC"
+    className="sc-dxgOiQ iOHuBN"
   >
     <h3
-      className="sc-fjdhpX cQEeDA"
+      className="sc-htoDjs gJSIof"
     >
       Codenames
     </h3>
@@ -31,22 +31,22 @@ exports[`#Home should render correctly 1`] = `
       Choose a game from the list below or create your own.
     </p>
     <ul
-      className="sc-jzJRlG lkdUhq"
+      className="sc-fjdhpX iSvycy"
     >
       <li
-        className="sc-cSHVUG enaHVM"
+        className="sc-jzJRlG jCQBUZ"
       >
         Unable to find any games. Why not create one?
       </li>
     </ul>
     <button
-      className="sc-iwsKbI izFQUc"
+      className="sc-bxivhb dpGJXM"
       onClick={[Function]}
     >
       Create Game
     </button>
     <button
-      className="sc-iwsKbI jvsbIL"
+      className="sc-bxivhb bxkbNa"
       onClick={[Function]}
     >
       Join Game

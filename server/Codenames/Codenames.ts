@@ -1,6 +1,7 @@
 import express from 'express'
 import { CodenamesGame } from '../../utils/Codenames/index'
 import { GameData } from '../../utils/Codenames/CodenamesGame'
+import { wsManager } from '../WebSocket'
 
 const MAX_GAMES = 50
 
@@ -24,6 +25,7 @@ const createGame = (req: express.Request, res: express.Response): void => {
 
   if (games.length < MAX_GAMES) {
     const game = new CodenamesGame(req.body.name)
+    wsManager.createWebSocketServer(`/codenames/socket/${game.getState().id}`)
     games.push(game)
     res.json(game.getState())
     return
@@ -81,6 +83,7 @@ const removeGame = (req: CodenameRequest, res: express.Response): void => {
 
   if (index) {
     games.splice(index, 1)
+    wsManager.removeWebSocketServer(`/codenames/socket/${req.game.getState().id}`)
   }
 
   res.sendStatus(200)
