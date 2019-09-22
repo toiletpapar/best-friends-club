@@ -2,7 +2,9 @@
 A gathering place for the best of friends
 
 ## TODO
-Add sockets for interactive game
+Add sockets for interactive game. Use cookies to remember users and generate user names for new clients.
+Fix an issue where changing styles causes styled-components to output new hashes that are hard to verify in jest snapshots. Fix with `jest-styled-components`
+Fix an issue where saving invalid server code (e.g. syntax error) causes the server to crash and become unrecoverable requiring a full rebuild and restart
 
 ## Roadmap
 1. Add codename tests

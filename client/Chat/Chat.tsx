@@ -2,13 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 
-interface Message {
+export interface Message {
   timestamp: number;
   user: string;
   message: string;
 }
 
-interface ChatProps {
+export interface ChatProps {
   messages: Message[];
   className?: string;
 }
@@ -28,7 +28,7 @@ const Container = styled('div')`
 
 const ChatContainer = styled('div')`
   overflow-y: auto;
-  max-height: 460px;
+  height: 460px;
 `
 
 const Message = styled('div')`
@@ -47,14 +47,17 @@ const Chat = (props: ChatProps): JSX.Element => {
     <Container className={props.className}>
       <ChatContainer>
         {
-          props.messages.map(({timestamp, user, message}, index): React.ReactNode => {
-            return (
-              //key={`${user}-${timestamp}`}
-              <Message key={index}>
-                {`[${moment(timestamp).format('HH:mm:ss')}] `}<b>{`${user}: `}</b>{`${message}`}
-              </Message>
-            )
-          })
+          props.messages.length > 0 ? (
+            props.messages.map(({timestamp, user, message}): React.ReactNode => {
+              return (
+                <Message key={`${user}-${timestamp}`}>
+                  {`[${moment(timestamp).format('HH:mm:ss')}] `}<b>{`${user}: `}</b>{`${message}`}
+                </Message>
+              )
+            })
+          ) : (
+            <Message>It&apos;s quiet in here...echoooo <span style={{fontSize: '10px'}}>echoooo</span> <span style={{fontSize: '6px'}}>echoooo</span></Message>
+          )
         }
       </ChatContainer>
       <hr />

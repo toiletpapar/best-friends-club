@@ -8,9 +8,12 @@ import { SpymasterKey as SK } from './SpymasterKey'
 import { Scoreboard as SB } from './Scoreboard'
 import { Help } from './Help'
 import { Chat } from '../Chat'
+import { Message } from '../Chat/Chat'
 import { Button } from '../common'
 
+import { wsManager } from '../clientUtils'
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
+import { createMessage, CodenameAction } from '../../utils/Codenames'
 
 interface CodenamesRouterProps {
   gameID: string;
@@ -65,9 +68,14 @@ const Card = styled('div')<CardProps>`
   cursor: pointer;
 `
 
-const setupCodenamesSocket = (id: string): void => {
+interface CodenameSocketOptions {
+  id: string;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+}
+
+const setupCodenamesSocket = (opts: CodenameSocketOptions): void => {
   // Create WebSocket connection.
-  const socket = new WebSocket(`ws://localhost:8080/codenames/socket/${id}`)
+  const socket = wsManager.createWebSocket(opts.id, `ws://localhost:8080/codenames/socket/${opts.id}`)
 
   // Connection opened
   socket.addEventListener('open', (): void => {
@@ -76,26 +84,35 @@ const setupCodenamesSocket = (id: string): void => {
 
   // Listen for messages
   socket.addEventListener('message', (event): void => {
-    // console.log('Message from server ', event.data)
+    const { type, ...data } = event.data
+    switch(type) {
+      case CodenameAction.CHAT_MESSAGE:
+        opts.setMessages((messages): Message[] => [...messages, data])
+    }
   })
 }
 
-const useCodenamesGame = (gameID: string): [GameData, React.Dispatch<React.SetStateAction<GameData>>] => {
-  const [game, setGame] = React.useState<GameData>(null)
+interface CodenameGameOptions {
+  gameID: string;
+  setGame: React.Dispatch<React.SetStateAction<GameData>>;
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+}
 
-  React.useEffect((): void => {
-    if (gameID) {
-      agent.get(`/codenames/${gameID}/player/board`).then(({body}): void => {
-        setGame(body)
-        setupCodenamesSocket(body.id)
+// Retrieve game
+const useCodenamesGame = (opts: CodenameGameOptions): void => {
+  React.useEffect((): () => void => {
+    if (opts.gameID) {
+      agent.get(`/codenames/${opts.gameID}/player/board`).then(({body}): void => {
+        opts.setGame(body)
+        setupCodenamesSocket({id: body.id, setMessages: opts.setMessages})
       }).catch((err): void => {
-        console.error(`Unable to find game with gameID ${gameID}`)
+        console.error(`Unable to find game with gameID ${opts.gameID}`)
         console.error(err)
       })
     }
-  }, [gameID])
 
-  return [game, setGame]
+    return (): void => wsManager.closeWebSocket(opts.gameID)
+  }, [opts])
 }
 
 const revealCard = (id: string, word: string, setGame: React.Dispatch<React.SetStateAction<GameData>>): () => void => (): void => {
@@ -151,7 +168,13 @@ const useToggle = (initialState: boolean): [boolean, () => void] => {
 }
 
 const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Element => {
-  const [game, setGame] = useCodenamesGame(props.match.params.gameID)
+  const gameID = props.match.params.gameID
+  const [game, setGame] = React.useState<GameData>(null)
+  const [messages, setMessages] = React.useState<Message[]>([])
+  const gameOptions = React.useMemo((): CodenameGameOptions => ({gameID, setGame, setMessages}), [gameID, setGame, setMessages])
+
+  useCodenamesGame(gameOptions)
+
   const [spymasterGame, setSpymasterGame] = React.useState<GameData>(null)
   const [helpOpen, toggleHelp] = useToggle(false)
 
@@ -162,26 +185,7 @@ const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Elemen
   return (
     <React.Fragment>
       <Container>
-        <CodenamesChat messages={[
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '},
-          {user: 'First', timestamp: 180000234, message: 'boop'}, {user: 'System', timestamp: Date.now(), message: 'Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! Testing! '}
-        ]} />
+        <CodenamesChat messages={messages} />
         <Scoreboard isSpymaster={!!spymasterGame} game={game} />
         { spymasterGame ? <SpymasterKey game={spymasterGame} /> : <InvisibleKey /> }
         {
