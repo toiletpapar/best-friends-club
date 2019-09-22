@@ -53,3 +53,24 @@ Something that's important to note is that modals can mess up focus and that can
 
 ### Jest doesn't know what to do with the document global
 We're mostly testing client-side code (so far). So lets make the test environment in `jest.config.js` a client-like enviornment. The default `testEnvironment` is `jsdom`.
+
+## Interactivity
+Our server is going to act as a broker for the users (i.e. clients) playing a codenames game so that the clients can communicate with each other (e.g. when someone clicks on a word). To do this I:
+
+### Implemented WebSockets
+*Rationale*
+The most common method of communication on the web is one-way with the client initiating a request to the server and the server providing a response. WebSockets allows two-way communication between the server and the client so that either could initiate a message. Thus, when a client does an action that other clients should know about (like when a card is clicked) the server can broadcast that message to the relevant users. The technology has been out for multiple years as of this writing and has stabilized. Both `socket.io` and `ws` are packages that help making implementing sockets much easier.
+
+*What worked*
+After deciding which package to use (`ws`) I followed the examples in the `ws` README. The first thing I did was separate out the creation of the node http server instance from the listening part. The instance was required by the WebSocket Server in order to automatically `upgrade` connections and express bundled them together for me but it was time to tear them apart. Then I added the required listeners (`connection`, `message`, and `close` being key events) before the server started listening for requests.
+
+One important thing to note is that `ws` does *not* provide a client-side implementation of websockets like `socket.io` does. Instead, I used the native WebSocket API provided by the browser. When the DOM loaded I created a WebSocket connection to my endpoint, attached my listeners, and sent my messages. This was the very beginning of sockets.
+
+### Multiple WebSocket Servers
+*Rationale*
+Without extending the websocket, it was hard to tell which websockets to broadcast to (we don't want to be broadcasting game events to lobbies that are irrelevant). We needed to find a way to broadcast exactly to the people we want to broadcast to. It was also clear that managing many servers and sockets could get out of hand very fast if the architecture wasn't thought out.
+
+*What worked*
+First we need to manage where all these servers go (`WebSocketManager`). What it did was handle the creation (and in the future, heartbeats, errors, and closures) of websocket servers and tied them to an identifier provided by the consumer. In order to handle multiple websocket servers, the http server needs to manage the upgrades of the connections of the websocket servers. We identify which server to emit the `connection` event to based on the url of the request. How we formatted the url to identify the server is described below.
+
+The differentiating factor between which websocket server a client connects to is the game of codenames that they're playing. Thus, we used the codenames game id as part of the url we use to identify the websocket server in the `WebSocketManager` list. Now when users join a game then they will connect to the proper websocket server.
