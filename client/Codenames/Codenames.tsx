@@ -177,6 +177,7 @@ const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Elemen
 
   const [spymasterGame, setSpymasterGame] = React.useState<GameData>(null)
   const [helpOpen, toggleHelp] = useToggle(false)
+  const [message, setMessage] = React.useState<string>('')
 
   if (!game) {
     return (<div />)
@@ -185,7 +186,12 @@ const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Elemen
   return (
     <React.Fragment>
       <Container>
-        <CodenamesChat messages={messages} />
+        <CodenamesChat
+          messages={messages}
+          message={message}
+          onMessageChange={setMessage}
+          onEnter={(): void => console.log('Enter!')}
+        />
         <Scoreboard isSpymaster={!!spymasterGame} game={game} />
         { spymasterGame ? <SpymasterKey game={spymasterGame} /> : <InvisibleKey /> }
         {

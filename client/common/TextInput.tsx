@@ -34,7 +34,7 @@ const TextInput = (props: TextInputProps): JSX.Element => {
   return (
     <React.Fragment>
       <Label htmlFor={name} hidden={!props.title}>{title}</Label>
-      <Input name={name} onChange={createOnChange(props)} value={value} />
+      <Input name={name} onChange={createOnChange(props)} value={value}  />
     </React.Fragment>
   )
 }
