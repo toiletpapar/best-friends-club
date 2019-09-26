@@ -11,9 +11,10 @@ import { Chat } from '../Chat'
 import { Message } from '../Chat/Chat'
 import { Button } from '../common'
 
-import { wsManager } from '../clientUtils'
+import { wsManager, WebSocketWrapper } from '../clientUtils'
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 import { createMessage, CodenameAction } from '../../utils/Codenames'
+import { ChatAction } from '../../utils/Codenames/actions'
 
 interface CodenamesRouterProps {
   gameID: string;
@@ -71,31 +72,26 @@ const Card = styled('div')<CardProps>`
 interface CodenameSocketOptions {
   id: string;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  setSocket: React.Dispatch<React.SetStateAction<WebSocketWrapper>>;
 }
 
 const setupCodenamesSocket = (opts: CodenameSocketOptions): void => {
   // Create WebSocket connection.
-  const socket = wsManager.createWebSocket(opts.id, `ws://localhost:8080/codenames/socket/${opts.id}`)
-
-  // Connection opened
-  socket.addEventListener('open', (): void => {
-    // socket.send('Hello Server!')
-  })
+  const socket = new WebSocketWrapper(wsManager.createWebSocket(opts.id, `ws://localhost:8080/codenames/socket/${opts.id}`))
 
   // Listen for messages
-  socket.addEventListener('message', (event): void => {
-    const { type, ...data } = event.data
-    switch(type) {
-      case CodenameAction.CHAT_MESSAGE:
-        opts.setMessages((messages): Message[] => [...messages, data])
-    }
+  socket.onAction(CodenameAction.CHAT_MESSAGE, ({type, ...message}: ChatAction): void => {
+    opts.setMessages((messages): Message[] => [...messages, message])
   })
+
+  opts.setSocket(socket)
 }
 
 interface CodenameGameOptions {
   gameID: string;
   setGame: React.Dispatch<React.SetStateAction<GameData>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  setSocket: React.Dispatch<React.SetStateAction<WebSocketWrapper>>;
 }
 
 // Retrieve game
@@ -104,7 +100,7 @@ const useCodenamesGame = (opts: CodenameGameOptions): void => {
     if (opts.gameID) {
       agent.get(`/codenames/${opts.gameID}/player/board`).then(({body}): void => {
         opts.setGame(body)
-        setupCodenamesSocket({id: body.id, setMessages: opts.setMessages})
+        setupCodenamesSocket({id: body.id, setMessages: opts.setMessages, setSocket: opts.setSocket})
       }).catch((err): void => {
         console.error(`Unable to find game with gameID ${opts.gameID}`)
         console.error(err)
@@ -167,11 +163,16 @@ const useToggle = (initialState: boolean): [boolean, () => void] => {
   ]
 }
 
+const sendChatMessage = (socket: WebSocketWrapper, message: string): void => {
+  socket.send(createMessage(message, Date.now(), 'test_user'))
+}
+
 const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Element => {
   const gameID = props.match.params.gameID
   const [game, setGame] = React.useState<GameData>(null)
   const [messages, setMessages] = React.useState<Message[]>([])
-  const gameOptions = React.useMemo((): CodenameGameOptions => ({gameID, setGame, setMessages}), [gameID, setGame, setMessages])
+  const [socket, setSocket] = React.useState<WebSocketWrapper>(null)
+  const gameOptions = React.useMemo((): CodenameGameOptions => ({gameID, setGame, setMessages, setSocket}), [gameID, setGame, setMessages, setSocket])
 
   useCodenamesGame(gameOptions)
 
@@ -190,7 +191,10 @@ const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Elemen
           messages={messages}
           message={message}
           onMessageChange={setMessage}
-          onEnter={(): void => console.log('Enter!')}
+          onEnter={(): void => {
+            sendChatMessage(socket, message)
+            setMessage('')
+          }}
         />
         <Scoreboard isSpymaster={!!spymasterGame} game={game} />
         { spymasterGame ? <SpymasterKey game={spymasterGame} /> : <InvisibleKey /> }

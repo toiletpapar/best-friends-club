@@ -1,7 +1,8 @@
 import express from 'express'
 import { CodenamesGame } from '../../utils/Codenames/index'
 import { GameData } from '../../utils/Codenames/CodenamesGame'
-import { wsManager } from '../WebSocket'
+import { wsManager, WebSocketServerWrapper } from '../WebSocket'
+import { CodenameAction } from '../../utils/Codenames/actions'
 
 const MAX_GAMES = 50
 
@@ -25,7 +26,11 @@ const createGame = (req: express.Request, res: express.Response): void => {
 
   if (games.length < MAX_GAMES) {
     const game = new CodenamesGame(req.body.name)
-    wsManager.createWebSocketServer(`/codenames/socket/${game.getState().id}`)
+    const wss = new WebSocketServerWrapper(wsManager.createWebSocketServer(`/codenames/socket/${game.getState().id}`))
+
+    // Setup chat
+    wss.onAction(CodenameAction.CHAT_MESSAGE, wss.broadcastAction)
+
     games.push(game)
     res.json(game.getState())
     return

@@ -56,7 +56,7 @@ class CodenamesGame {
     this.setupGame()
   }
 
-  private initializeBoard(): Card[] {
+  private initializeBoard = (): Card[] => {
     const words = this.prng.getRandomNumberSet(0, dictionary.length - 1, CodenamesGame.NUM_CARDS)
     const agents = this.prng.getRandomNumberSet(0, CodenamesGame.NUM_CARDS - 1, CodenamesGame.NUM_CARDS)
     const board: Card[] = []
@@ -92,7 +92,7 @@ class CodenamesGame {
     return board
   }
 
-  public setupGame(): CodenamesGame {
+  public setupGame = (): CodenamesGame => {
     this.board = this.initializeBoard()
     this.gameState = GameState.PLAYING
     this.currentTurn = Team.FIRSTTEAM
@@ -104,7 +104,7 @@ class CodenamesGame {
     return this
   }
 
-  public passTurn(): CodenamesGame {
+  public passTurn = (): CodenamesGame => {
     if (this.gameState !== GameState.PLAYING) {
       console.warn('The game is already finished')
       return this
@@ -119,7 +119,7 @@ class CodenamesGame {
     return this
   }
 
-  public revealCard(word: string): CodenamesGame {
+  public revealCard = (word: string): CodenamesGame => {
     if (this.gameState !== GameState.PLAYING) {
       console.warn('The game is already finished')
       return this
@@ -175,7 +175,7 @@ class CodenamesGame {
     return this
   }
 
-  private getClientBoardState(): Card[] {
+  private getClientBoardState = (): Card[] => {
     return this.board.map((card): Card => {
       if (!card.revealed) {
         return {
@@ -188,7 +188,7 @@ class CodenamesGame {
     })
   }
 
-  public getState(): GameData {
+  public getState = (): GameData => {
     return {
       id: this.id,
       name: this.name,
@@ -199,7 +199,7 @@ class CodenamesGame {
     }
   }
 
-  public getSpymasterState(): GameData {
+  public getSpymasterState = (): GameData => {
     return {
       id: this.id,
       name: this.name,

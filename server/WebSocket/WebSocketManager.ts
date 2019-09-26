@@ -12,7 +12,7 @@ class WebSocketManager {
     this.wsServers = []
   }
 
-  public createWebSocketServer(id: string): WebSocket.Server {
+  public createWebSocketServer = (id: string): WebSocket.Server => {
     const wss = new WebSocket.Server({noServer: true})
 
     this.wsServers.push({id, wss})
@@ -20,7 +20,7 @@ class WebSocketManager {
     return wss
   }
 
-  public removeWebSocketServer(id: string): Promise<void> {
+  public removeWebSocketServer = (id: string): Promise<void> => {
     const index = this.wsServers.findIndex((server): boolean => server.id === id)
 
     if (index) {
@@ -42,15 +42,15 @@ class WebSocketManager {
     }
   }
 
-  public getServers(): Server[] {
+  public getServers = (): Server[] => {
     return this.wsServers
   }
 
-  public getServer(id: string): Server {
+  public getServer = (id: string): Server => {
     return this.wsServers.find((server): boolean => server.id === id)
   }
 }
 
 export {
-  WebSocketManager
+  WebSocketManager,
 }
