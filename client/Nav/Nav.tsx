@@ -8,6 +8,10 @@ const LogoImg = styled('img')`
   width: 75px;
 `
 
+const NavLink = styled(Link)`
+  margin: 0px 20px;
+`
+
 const Container = styled('div')`
   display: flex;
   background-color: ${(props): string => props.theme.black};
@@ -15,11 +19,22 @@ const Container = styled('div')`
   align-items: center;
 `
 
-const Nav = (props: React.PropsWithoutRef<JSX.IntrinsicElements['div']>): JSX.Element => {
+const UserContainer = styled('div')`
+  flex: 1;
+  text-align: right;
+  margin: 0px 20px;
+`
+
+interface NavProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
+  user: string;
+}
+
+const Nav = (props: NavProps): JSX.Element => {
   return (
     <Container className={props.className}>
       <LogoImg src={Logo} />
-      <Link to='/'>Lobby</Link>
+      <NavLink to='/'>Lobby</NavLink>
+      <UserContainer>{props.user || ''}</UserContainer>
     </Container>
   )
 }

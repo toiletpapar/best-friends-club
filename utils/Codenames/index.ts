@@ -3,8 +3,9 @@ import {
   Team,
   GameState,
 } from './CodenamesGame'
+
 import {
-  CodenameAction,
+  Actions,
   createMessage
 } from './actions'
 
@@ -12,6 +13,6 @@ export {
   CodenamesGame,
   Team,
   GameState,
-  CodenameAction,
+  Actions,
   createMessage
 }

@@ -6,9 +6,7 @@ import { RouteComponentProps } from 'react-router'
 import { Button, Modal, TextInput, Header } from '../common/index'
 import { GameList } from './GameList'
 import { GameData } from '../../utils/Codenames/CodenamesGame'
-import { PRNG } from '../../utils/PRNG'
-import {adjectives} from '../../utils/data/adjectives.json'
-import {dictionary} from '../../utils/data/codenames.json'
+import { getRandomName } from '../../utils/data'
 
 const ModalContainer = styled(Modal)`
   display: grid;
@@ -28,8 +26,6 @@ const ModalHeader = styled(Header)`
 const ModalButton = styled(Button)`
   grid-area: button;
 `
-
-const prng = new PRNG()
 
 // Create a game and update the game's list
 const createGame = (
@@ -68,7 +64,7 @@ const Lobby = (props: RouteComponentProps<{}>): JSX.Element => {
   useGames(setGames)
 
   const generateNameAndOpen = (): void => {
-    setGameName(`${adjectives[prng.getRandomNumber(0, adjectives.length)]} ${dictionary[prng.getRandomNumber(0, dictionary.length)]}`)
+    setGameName(getRandomName())
     setIsOpen(true)
   }
 
@@ -87,7 +83,7 @@ const Lobby = (props: RouteComponentProps<{}>): JSX.Element => {
         selectedGameID={selectedGameID}
       />
       <Button left onClick={generateNameAndOpen}>Create Game</Button>
-      <Button onClick={(): void => props.history.push(`/codenames/${selectedGameID}`)}>Join Game</Button>
+      <Button disabled={!selectedGameID} onClick={(): void => props.history.push(`/codenames/${selectedGameID}`)}>Join Game</Button>
       {
         isOpen && (
           <ModalContainer onClose={(): void => setIsOpen(false)}>

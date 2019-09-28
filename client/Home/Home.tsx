@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom'
 import { Codenames } from '../Codenames/index'
 import { Lobby } from '../Lobby/index'
 import { Nav as el } from '../Nav/index'
+import { getRandomName, titleCase } from '../../utils/data'
 
 const Background = styled('div')`
   background-color: ${(props): string => props.theme.lightgray};
@@ -24,9 +25,16 @@ const Nav = styled(el)`
 `
 
 const Home = (): JSX.Element => {
+  let user = localStorage.getItem('user')
+
+  if (!user) {
+    user = titleCase(getRandomName())
+    localStorage.setItem('user', user)
+  }
+
   return (
     <Background>
-      <Nav />
+      <Nav user={user} />
       <Container>
         <Switch>
           <Route path='/codenames/:gameID' exact component={Codenames} />

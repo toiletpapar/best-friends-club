@@ -14,6 +14,10 @@ const Button = styled('button')<ButtonInterface>`
   ${(props): string => props.left && 'margin-left: 0px;'}
   color: ${(props): string => props.theme.lightgray};
   background-color: ${(props): string => props.theme.blue};
+
+  &:disabled {
+    background-color: ${(props): string => props.theme.darkgray};
+  }
 `
 
 export {

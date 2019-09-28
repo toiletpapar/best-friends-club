@@ -1,13 +1,19 @@
 import * as WebSocket from 'ws'
-import { Action, CodenameAction } from '../../utils/Codenames/actions'
+import { Action, Actions } from '../../utils/Codenames/actions'
 
-class WebSocketServerWrapper {
+export interface WebSocketModifications {
+  isAlive: boolean;
+}
+
+type ServerSocket<T> = WebSocket & WebSocketModifications & T
+
+class WebSocketServerWrapper<T> {
   private server: WebSocket.Server
   private static PING_INTERVAL: number = 10000
   private noop (): void {}
   
   private initHeartbeats = (): void => {
-    this.server.on('connection', (ws: WebSocket & { isAlive: boolean }): void => {
+    this.onSocketConnection((ws: ServerSocket<T>): void => {
       // Add a heartbeat to every new connection
       ws.isAlive = true
 
@@ -19,7 +25,7 @@ class WebSocketServerWrapper {
 
     // Ping all clients
     setInterval((): void => {
-      this.broadcast((client: WebSocket & { isAlive: boolean }): void => {
+      this.broadcast((client: ServerSocket<T>): void => {
         if (client.isAlive === false) {
           client.terminate()
           return
@@ -37,8 +43,8 @@ class WebSocketServerWrapper {
   }
 
   // Generic broadcast
-  public broadcast = (fn: (client: WebSocket & { isAlive: boolean }) => void): void => {
-    this.server.clients.forEach((client: WebSocket & { isAlive: boolean }): void => {
+  public broadcast = (fn: (client: ServerSocket<T>) => void): void => {
+    this.server.clients.forEach((client: ServerSocket<T>): void => {
       if (client.readyState === WebSocket.OPEN) {
         fn(client)
       }
@@ -51,14 +57,14 @@ class WebSocketServerWrapper {
   }
 
   // Generically execute fn when predicate evaluates to true
-  public onMessage = (predicate: (action: Action) => boolean, fn: (action: Action) => void): void => {
-    this.server.on('connection', (ws): void => {
-      ws.on('message', (message: string): void => {
+  public onMessage = <A>(predicate: (action: any) => action is A, fn: (action: A, socket: ServerSocket<T>) => void): void => {
+    this.onSocketConnection((ws): void => {
+      ws.on('message', (message): void => {
         try {
-          const action: Action = JSON.parse(message)
+          const action: Action = JSON.parse(message.toString())
 
           if (predicate(action)) {
-            fn(action)
+            fn(action, ws)
           }
         } catch (err) {
           console.error(err)
@@ -68,8 +74,27 @@ class WebSocketServerWrapper {
   }
 
   // Execute fn when the client's message.type is the specified action
-  public onAction = (action: CodenameAction, fn: (action: Action) => void): void => {
-    this.onMessage((message: Action): boolean => action === message.type, fn)
+  public onAction = <A>(type: Actions, fn: (action: A, socket: ServerSocket<T>) => void): void => {
+    this.onMessage((message): message is A => message && type === message.type, fn)
+  }
+
+  // Execute fn when an error in the socket occurs
+  public onSocketConnectionError = (fn: (error: Error) => void): void => {
+    this.onSocketConnection((ws): void => {
+      ws.on('error', fn)
+    })
+  }
+
+  // Execute fn when a socket connects
+  public onSocketConnection = (fn: (socket: ServerSocket<T>, request: Express.Request) => void): void => {
+    this.server.on('connection', fn)
+  }
+
+  // Execute fn when a socket closes
+  public onSocketClose = (fn: (ws: ServerSocket<T>) => (code: number, reason: string) => void): void => {
+    this.onSocketConnection((ws): void => {
+      ws.on('close', fn(ws))
+    })
   }
 
   public getServer = (): WebSocket.Server => {

@@ -1,5 +1,5 @@
 import {KeyboardEvent} from 'react'
-import {Action, CodenameAction} from '../utils/Codenames/actions'
+import {Action, Actions} from '../utils/Codenames/actions'
 
 interface SocketID {
   id: string;
@@ -14,7 +14,11 @@ class WebSocketWrapper {
   }
 
   public send = (action: Action): void => {
-    this.socket.send(JSON.stringify(action))
+    if (this.isReady()) {
+      this.socket.send(JSON.stringify(action))
+    } else {
+      console.warn('Tried to send message before socket was ready')
+    }
   }
 
   public onMessage = (predicate: (action: Action) => boolean, fn: (action: Action) => void): void => {
@@ -31,8 +35,20 @@ class WebSocketWrapper {
     })
   }
 
-  public onAction = (action: CodenameAction, fn: (action: Action) => void): void => {
+  public onAction = (action: Actions, fn: (action: Action) => void): void => {
     this.onMessage((message): boolean => message.type === action, fn)
+  }
+
+  public onConnection = (fn: () => void): void => {
+    this.socket.addEventListener('open', fn)
+  }
+
+  public getReadyState = (): number => {
+    return this.socket.readyState
+  }
+
+  public isReady = (): boolean => {
+    return this.getReadyState() === 1
   }
 }
 
@@ -72,9 +88,14 @@ const onEnter = (fn: Function): <T>(event: KeyboardEvent<T>) => void => {
   }
 }
 
+const getCookie = (): {[key: string]: string} => {
+  return document.cookie.split(';').reduce((acc, kv): {[key: string]: string} => ({...acc, [kv.split('=')[0]]: kv.split('=')[1]}), {})
+}
+
 export {
   WebSocketManager,
   wsManager,
   WebSocketWrapper,
-  onEnter
+  onEnter,
+  getCookie
 }

@@ -13,8 +13,8 @@ import { Button } from '../common'
 
 import { wsManager, WebSocketWrapper } from '../clientUtils'
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
-import { createMessage, CodenameAction } from '../../utils/Codenames'
-import { ChatAction } from '../../utils/Codenames/actions'
+import { createMessage, Actions } from '../../utils/Codenames'
+import { ChatAction, UserJoinAction, UserLeaveAction, createUserJoin } from '../../utils/Codenames/actions'
 
 interface CodenamesRouterProps {
   gameID: string;
@@ -80,8 +80,21 @@ const setupCodenamesSocket = (opts: CodenameSocketOptions): void => {
   const socket = new WebSocketWrapper(wsManager.createWebSocket(opts.id, `ws://localhost:8080/codenames/socket/${opts.id}`))
 
   // Listen for messages
-  socket.onAction(CodenameAction.CHAT_MESSAGE, ({type, ...message}: ChatAction): void => {
+  socket.onAction(Actions.CHAT_MESSAGE, ({type, ...message}: ChatAction): void => {
     opts.setMessages((messages): Message[] => [...messages, message])
+  })
+
+  socket.onAction(Actions.USER_JOIN, ({type, user, timestamp}: UserJoinAction): void => {
+    opts.setMessages((messages): Message[] => [...messages, {timestamp, user: 'System', message: `${user} has joined the game.`}])
+  })
+
+  socket.onAction(Actions.USER_LEAVE, ({type, user}: UserLeaveAction): void => {
+    opts.setMessages((messages): Message[] => [...messages, {timestamp: Date.now(), user: 'System', message: `${user} has left the game.`}])
+  })
+
+  // Tell everyone you're here!
+  socket.onConnection((): void => {
+    socket.send(createUserJoin(localStorage.getItem('user') || 'Stale Onion', Date.now()))
   })
 
   opts.setSocket(socket)

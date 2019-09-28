@@ -34,6 +34,9 @@ class PRNG {
   }
 }
 
+const prng = new PRNG()
+
 export {
-  PRNG
+  PRNG,
+  prng
 }

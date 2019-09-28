@@ -2,9 +2,13 @@ import express from 'express'
 import { CodenamesGame } from '../../utils/Codenames/index'
 import { GameData } from '../../utils/Codenames/CodenamesGame'
 import { wsManager, WebSocketServerWrapper } from '../WebSocket'
-import { CodenameAction } from '../../utils/Codenames/actions'
+import { Actions, createUserLeave, UserJoinAction, ChatAction } from '../../utils/Codenames/actions'
 
 const MAX_GAMES = 50
+
+interface BFCSocket {
+  bfcUser: string;
+}
 
 interface CodenameRequest extends express.Request {
   game?: CodenamesGame;
@@ -26,10 +30,31 @@ const createGame = (req: express.Request, res: express.Response): void => {
 
   if (games.length < MAX_GAMES) {
     const game = new CodenamesGame(req.body.name)
-    const wss = new WebSocketServerWrapper(wsManager.createWebSocketServer(`/codenames/socket/${game.getState().id}`))
+    const wss = new WebSocketServerWrapper<BFCSocket>(wsManager.createWebSocketServer(`/codenames/socket/${game.getState().id}`))
+
+    // Setup error handling
+    wss.onSocketConnectionError((err): void => {
+      console.error(err)
+    })
+
+    // Setup connection message
+    wss.onSocketConnection((socket): void => {
+      socket.bfcUser = 'Fresh Onion'
+    })
+
+    // Setup user entrance
+    wss.onAction<UserJoinAction>(Actions.USER_JOIN, (action, socket): void => {
+      socket.bfcUser = action.user
+      wss.broadcastAction(action)
+    })
 
     // Setup chat
-    wss.onAction(CodenameAction.CHAT_MESSAGE, wss.broadcastAction)
+    wss.onAction<ChatAction>(Actions.CHAT_MESSAGE, wss.broadcastAction)
+
+    // Setup disconnection/exit messages
+    wss.onSocketClose((socket): () => void => (): void => {
+      wss.broadcastAction(createUserLeave(socket.bfcUser))
+    })
 
     games.push(game)
     res.json(game.getState())

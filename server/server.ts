@@ -3,6 +3,7 @@ import * as path from 'path'
 import bodyParser from 'body-parser'
 import * as http from 'http'
 import * as url from 'url'
+import cookieParser from 'cookie-parser'
 
 import { router as CodenamesRouter } from './Codenames/index'
 import { wsManager } from './WebSocket'
@@ -31,6 +32,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 app.use('/codenames', CodenamesRouter)
 

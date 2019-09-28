@@ -74,3 +74,13 @@ Without extending the websocket, it was hard to tell which websockets to broadca
 First we need to manage where all these servers go (`WebSocketManager`). What it did was handle the creation (and in the future, heartbeats, errors, and closures) of websocket servers and tied them to an identifier provided by the consumer. In order to handle multiple websocket servers, the http server needs to manage the upgrades of the connections of the websocket servers. We identify which server to emit the `connection` event to based on the url of the request. How we formatted the url to identify the server is described below.
 
 The differentiating factor between which websocket server a client connects to is the game of codenames that they're playing. Thus, we used the codenames game id as part of the url we use to identify the websocket server in the `WebSocketManager` list. Now when users join a game then they will connect to the proper websocket server.
+
+### Knowing when to let go
+*Rationale*
+Things happen. Servers go down unexpectedly, there are power outages on the client side. How exactly do we know whether somebody is on the other end of the socket?
+
+*What worked*
+We played a simple game of ping/pong. The server assumed all sockets were alive at the beginning of their connection. Every `interval` the server would terminate all clients that were not alive and would send a ping to the remaining sockets, marking them as dead for cleanup if they don't respond. Then we listen for when the browser client responds with the pong (which is managed by the browser), at which point we declare the responding socket alive. Given that this is universal to all sockets we included this functionality as part of a wrapper class called `WebSocketServerWrapper`.
+
+### Communication
+It's important that I maintain a consistent structure for the messages that are sent through to ensure I remember what I'm doing 2 years from now. What I decided on was to enumerate a number of actions that could be used client and server-side. The actions carry all the necessary data to perform the relevant operations on both server and client. The wrapper classes for the sockets provide methods to enforce this behaviour as well as several conveniences like broadcasting, error handling, and managing the message format.

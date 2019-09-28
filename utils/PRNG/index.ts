@@ -1,5 +1,5 @@
-import { PRNG } from './PRNG'
+import { PRNG, prng } from './PRNG'
 
 export {
-  PRNG
+  PRNG, prng
 }
