@@ -7,7 +7,8 @@
     "init": "npm run buildDev",
     "buildDev": "npm run test && webpack --config webpack.dev.client.js && webpack --config webpack.dev.server.js",
     "build": "npm run test && webpack --config webpack.prod.client.js && webpack --config webpack.prod.server.js",
-    "dev": "concurrently --kill-others \"webpack --config webpack.dev.server.js --watch\" \"nodemon ./build/server.bundle.js\"",
+    "devRun": "nodemon ./build/server.bundle.js",
+    "devWatch": "webpack --config webpack.dev.server.js --watch",
     "prod": "node ./build/server.bundle.js"
   },
   "repository": {

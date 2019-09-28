@@ -4,6 +4,7 @@ import { Modal } from './Modal'
 import { TextInput } from './TextInput'
 import { Header } from './Header'
 import { TextArea } from './TextArea'
+import { Section } from './Section'
 
 export {
   Link,
@@ -11,5 +12,6 @@ export {
   Modal,
   TextInput,
   Header,
-  TextArea
+  TextArea,
+  Section
 }

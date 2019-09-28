@@ -2,7 +2,9 @@
 A gathering place for the best of friends
 
 ## TODO
-Add ability to change the name
+Use socket for remaining codenames functionality
+Implement a box to show which users are connected to the codenames game
+Destroy socket when codenames game is unloaded
 Fix an issue where changing styles causes styled-components to output new hashes that are hard to verify in jest snapshots. Fix with `jest-styled-components`
 Fix an issue where saving invalid server code (e.g. syntax error) causes the server to crash and become unrecoverable requiring a full rebuild and restart
 

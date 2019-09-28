@@ -3,6 +3,7 @@ import * as agent from 'superagent'
 import styled from 'styled-components'
 import { RouteComponentProps } from 'react-router'
 
+import { Link } from 'react-router-dom'
 import { Button, Modal, TextInput, Header } from '../common/index'
 import { GameList } from './GameList'
 import { GameData } from '../../utils/Codenames/CodenamesGame'
@@ -55,7 +56,11 @@ const useGames = (
   }, [setGames])
 }
 
-const Lobby = (props: RouteComponentProps<{}>): JSX.Element => {
+interface LobbyProps {
+  user: string;
+}
+
+const Lobby = (props: RouteComponentProps<{}> & LobbyProps): JSX.Element => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const [games, setGames] = React.useState<GameData[]>([])
   const [selectedGameID, setSelectedGameID] = React.useState<string>('')
@@ -75,6 +80,10 @@ const Lobby = (props: RouteComponentProps<{}>): JSX.Element => {
 
   return (
     <React.Fragment>
+      <Header>Profile</Header>
+      <p>
+        Don&apos;t like your name {props.user}? <Link to='/profile'>Click Here!</Link>
+      </p>
       <Header>Codenames</Header>
       <p>Choose a game from the list below or create your own.</p>
       <GameList

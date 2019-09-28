@@ -19,10 +19,9 @@ const Container = styled('div')`
   align-items: center;
 `
 
-const UserContainer = styled('div')`
+const UserLink = styled(NavLink)`
   flex: 1;
   text-align: right;
-  margin: 0px 20px;
 `
 
 interface NavProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
@@ -34,7 +33,7 @@ const Nav = (props: NavProps): JSX.Element => {
     <Container className={props.className}>
       <LogoImg src={Logo} />
       <NavLink to='/'>Lobby</NavLink>
-      <UserContainer>{props.user || ''}</UserContainer>
+      <UserLink to='/profile'>Welcome {props.user || ''}!</UserLink>
     </Container>
   )
 }

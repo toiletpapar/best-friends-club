@@ -15,6 +15,7 @@ import { wsManager, WebSocketWrapper } from '../clientUtils'
 import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 import { createMessage, Actions } from '../../utils/Codenames'
 import { ChatAction, UserJoinAction, UserLeaveAction, createUserJoin } from '../../utils/Codenames/actions'
+import { ProfileInformation } from '../Profile/Profile'
 
 interface CodenamesRouterProps {
   gameID: string;
@@ -94,7 +95,7 @@ const setupCodenamesSocket = (opts: CodenameSocketOptions): void => {
 
   // Tell everyone you're here!
   socket.onConnection((): void => {
-    socket.send(createUserJoin(localStorage.getItem('user') || 'Stale Onion', Date.now()))
+    socket.send(createUserJoin(JSON.parse(localStorage.getItem('profile')).user, Date.now()))
   })
 
   opts.setSocket(socket)

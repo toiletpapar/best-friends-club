@@ -12,6 +12,8 @@ const Input = styled('input')`
 `
 const Label = styled('label')`
   color: black;
+  display: block;
+  margin-bottom: 2px;
 `
 
 const createOnChange = (props: TextInputProps): (event: React.ChangeEvent<HTMLInputElement>) => void => (event: React.ChangeEvent<HTMLInputElement>): void => {
