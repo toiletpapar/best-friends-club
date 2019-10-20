@@ -16,6 +16,7 @@ import { GameData, Team } from '../../utils/Codenames/CodenamesGame'
 import { createMessage, Actions } from '../../utils/Codenames'
 import { ChatAction, UserJoinAction, UserLeaveAction, createUserJoin } from '../../utils/Codenames/actions'
 import { ProfileInformation } from '../Profile/Profile'
+import { PlayerList as PL } from './PlayerList'
 
 interface CodenamesRouterProps {
   gameID: string;
@@ -27,7 +28,7 @@ interface CardProps {
 
 const Container = styled('div')`
   display: grid;
-  grid: [row1-start] "score score score score key key" auto [row1-end]
+  grid: [row1-start] "score players players players key key" auto [row1-end]
         [row2-start] "chat . . . . ." 100px [row2-end]
         [row3-start] "chat . . . . ." 100px [row3-end]
         [row4-start] "chat . . . . ." 100px [row4-end]
@@ -37,6 +38,10 @@ const Container = styled('div')`
         / 250px 1fr 1fr 1fr 1fr 1fr;
   row-gap: 10px;
   column-gap: 10px;
+`
+
+const PlayerList = styled(PL)`
+  grid-area: players; 
 `
 
 const CodenamesChat = styled(Chat)`
@@ -201,6 +206,7 @@ const Codenames = (props: RouteComponentProps<CodenamesRouterProps>): JSX.Elemen
   return (
     <React.Fragment>
       <Container>
+        <PlayerList players={['player 1', 'player 2']} />
         <CodenamesChat
           messages={messages}
           message={message}

@@ -6,6 +6,7 @@ import { Button, TextInput, Header, Section } from '../common/index'
 import { getRandomName, titleCase } from '../../utils/data'
 
 export interface ProfileInformation {
+  id: string;
   user: string;
 }
 
@@ -47,6 +48,9 @@ const Profile = (props: ProfileProps): JSX.Element => {
       <Section>
         <Header>Profile</Header>
         <p>Be who you really want to be.</p>
+      </Section>
+      <Section>
+        <TextInput title='Profile ID: ' value={profile.id} disabled />
       </Section>
       <Section>
         <TextInput title='Display Name: ' value={profile.user} onUpdate={setUser} />

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 const el = document.createElement('div')
 const Overlay = styled('div')`
   position: absolute;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, 0.2);
   display: flex;

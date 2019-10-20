@@ -8,6 +8,7 @@ import { Nav as el } from '../Nav/index'
 import { getRandomName, titleCase } from '../../utils/data'
 import { Profile } from '../Profile'
 import { ProfileInformation } from '../Profile/Profile'
+import { prng } from '../../utils/PRNG'
 
 const Background = styled('div')`
   background-color: ${(props): string => props.theme.lightgray};
@@ -27,7 +28,7 @@ const Nav = styled(el)`
 `
 
 // NOTE: Site will fail if localStorage is not enabled...
-const defaultProfile: ProfileInformation = {user: titleCase(getRandomName())}
+const defaultProfile: ProfileInformation = {id: prng.getID(), user: titleCase(getRandomName())}
 const createDefaultProfile = (): ProfileInformation => {
   localStorage.setItem('profile', JSON.stringify(defaultProfile))
   return defaultProfile

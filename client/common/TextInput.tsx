@@ -31,12 +31,13 @@ const TextInput = (props: TextInputProps): JSX.Element => {
     name,
     title,
     value,
+    disabled
   } = props
 
   return (
     <React.Fragment>
       <Label htmlFor={name} hidden={!props.title}>{title}</Label>
-      <Input name={name} onChange={createOnChange(props)} value={value}  />
+      <Input name={name} onChange={createOnChange(props)} value={value} disabled={disabled}  />
     </React.Fragment>
   )
 }
