@@ -4,6 +4,6 @@ import App from './App'
 
 const root = document.createElement('div')
 document.body.appendChild(root)
-document.body.setAttribute('style', 'margin: 0; font-size: 12px; font-family: sans-serif;')
+document.body.setAttribute('style', 'margin: 0; font-size: 12px; font-family: sans-serif; position: relative;')
 
 ReactDOM.render(<App />, root)
